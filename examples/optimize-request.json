@@ -1,0 +1,16 @@
+{
+  "product_name": "Sample Product",
+  "destination_country": "CN",
+  "current_hs_code": "0000.00.00",
+  "current_tariff_rate": 8.0,
+  "bom_items": [
+    {"material_name": "Material A", "ratio": 40, "cost": 100, "origin_country": "TW", "adjustable": true},
+    {"material_name": "Material B", "ratio": 35, "cost": 80, "origin_country": "CN", "adjustable": true},
+    {"material_name": "Material C", "ratio": 25, "cost": 50, "origin_country": "JP", "adjustable": false}
+  ],
+  "constraints": {
+    "max_cost_increase_pct": 2,
+    "locked_materials": ["Material C"],
+    "notes": "MVP example"
+  }
+}
