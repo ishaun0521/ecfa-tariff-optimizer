@@ -1,0 +1,7 @@
+product_name,material_name,material_code,ratio,cost,origin_country,adjustable,notes
+珍珠奶茶(示意測試版),水,ING-WATER,58,8,TW,false,成品測試用 BOM
+珍珠奶茶(示意測試版),紅茶萃取液,ING-TEA,12,18,TW,true,
+珍珠奶茶(示意測試版),奶精/乳粉,ING-CREAM,10,20,NZ,true,
+珍珠奶茶(示意測試版),糖,ING-SUGAR,9,9,TW,true,
+珍珠奶茶(示意測試版),粉圓/珍珠,ING-BOBA,8,22,TW,true,
+珍珠奶茶(示意測試版),香料與安定劑,ING-FLAVOR,3,12,JP,true,

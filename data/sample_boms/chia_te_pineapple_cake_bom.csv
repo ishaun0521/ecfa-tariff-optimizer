@@ -1,0 +1,7 @@
+product_name,material_name,material_code,ratio,cost,origin_country,adjustable,notes
+佳德鳳梨酥(示意測試版),麵粉,ING-FLOUR,24,12,TW,true,成品測試用 BOM
+佳德鳳梨酥(示意測試版),奶油,ING-BUTTER,18,30,NZ,true,
+佳德鳳梨酥(示意測試版),冬瓜鳳梨餡,ING-FILLING,40,42,TW,true,
+佳德鳳梨酥(示意測試版),糖,ING-SUGAR,8,8,TW,true,
+佳德鳳梨酥(示意測試版),雞蛋,ING-EGG,7,15,TW,false,
+佳德鳳梨酥(示意測試版),奶粉與香料,ING-MILKFLAVOR,3,10,AU,true,

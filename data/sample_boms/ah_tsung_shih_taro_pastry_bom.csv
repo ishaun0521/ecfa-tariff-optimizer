@@ -1,0 +1,7 @@
+product_name,material_name,material_code,ratio,cost,origin_country,adjustable,notes
+阿聰師芋頭酥(示意測試版),麵粉,ING-FLOUR,22,12,TW,true,成品測試用 BOM
+阿聰師芋頭酥(示意測試版),奶油/酥油,ING-FAT,16,28,MY,true,
+阿聰師芋頭酥(示意測試版),芋頭餡,ING-TARO,42,48,TW,true,
+阿聰師芋頭酥(示意測試版),糖,ING-SUGAR,8,8,TW,true,
+阿聰師芋頭酥(示意測試版),雞蛋,ING-EGG,7,15,TW,false,
+阿聰師芋頭酥(示意測試版),香料與乳粉,ING-FLAVOR,5,14,JP,true,
