@@ -1,6 +1,8 @@
+import os
 from pathlib import Path
+from typing import Optional
 
-from fastapi import FastAPI, UploadFile, File, HTTPException
+from fastapi import FastAPI, UploadFile, File, HTTPException, Request, Header
 from fastapi.middleware.cors import CORSMiddleware
 from fastapi.responses import FileResponse
 from fastapi.staticfiles import StaticFiles
@@ -10,6 +12,7 @@ from app.services.analysis import analyze_product
 from app.services.classification import classify_product, official_sources
 from app.services.optimizer import optimize_bom
 from app.services.upload import parse_uploaded_file
+from app.services.usage_log import log_request, get_logs, clear_logs, ADMIN_TOKEN
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = BASE_DIR / "frontend"
@@ -113,23 +116,138 @@ def health():
 
 
 @app.post("/classify")
-def classify(req: AnalyzeRequest):
+def classify(req: AnalyzeRequest, request: Request = None, user_agent: Optional[str] = Header(None)):
+    # Log the request
+    if request:
+        client_ip = request.client.host if request.client else "unknown"
+        log_request(
+            endpoint="/classify",
+            ip=client_ip,
+            method="POST",
+            user_agent=user_agent,
+            request_body=req.model_dump() if req else None
+        )
     return classify_product(req)
 
 
 @app.post("/analyze")
-def analyze(req: AnalyzeRequest):
+def analyze(req: AnalyzeRequest, request: Request = None, user_agent: Optional[str] = Header(None)):
+    # Log the request
+    if request:
+        client_ip = request.client.host if request.client else "unknown"
+        log_request(
+            endpoint="/analyze",
+            ip=client_ip,
+            method="POST",
+            user_agent=user_agent,
+            request_body=req.model_dump() if req else None
+        )
     return analyze_product(req)
 
 
 @app.post("/optimize")
-def optimize(req: OptimizeRequest):
+def optimize(req: OptimizeRequest, request: Request = None, user_agent: Optional[str] = Header(None)):
+    # Log the request
+    if request:
+        client_ip = request.client.host if request.client else "unknown"
+        log_request(
+            endpoint="/optimize",
+            ip=client_ip,
+            method="POST",
+            user_agent=user_agent,
+            request_body=req.model_dump() if req else None
+        )
     return optimize_bom(req)
 
 
 @app.post("/upload-bom")
-async def upload_bom(file: UploadFile = File(...)):
+async def upload_bom(file: UploadFile = File(...), request: Request = None, user_agent: Optional[str] = Header(None)):
+    # Log the request
+    if request:
+        client_ip = request.client.host if request.client else "unknown"
+        log_request(
+            endpoint="/upload-bom",
+            ip=client_ip,
+            method="POST",
+            user_agent=user_agent,
+            request_body={"filename": file.filename}
+        )
     try:
         return await parse_uploaded_file(file)
     except Exception as e:
         raise HTTPException(status_code=400, detail=str(e))
+
+
+# ============================================
+# Admin endpoints (Shaun only)
+# ============================================
+
+@app.get("/admin/usage-logs")
+def admin_get_logs(
+    request: Request,
+    token: Optional[str] = Header(None, alias="X-Admin-Token"),
+    limit: int = 100,
+    offset: int = 0,
+):
+    """
+    Get usage logs (admin only)
+    
+    Usage: GET /admin/usage-logs?limit=50&offset=0
+    Headers: X-Admin-Token: <your-admin-token>
+    
+    Or use query param: ?token=<your-admin-token>
+    """
+    # Check token
+    admin_token = token or request.query_params.get("token")
+    if not admin_token:
+        return {"error": "Admin token required", "hint": "Use X-Admin-Token header or ?token= query param"}
+    
+    return get_logs(admin_token, limit=limit, offset=offset)
+
+
+@app.delete("/admin/usage-logs")
+def admin_clear_logs(
+    request: Request,
+    token: Optional[str] = Header(None, alias="X-Admin-Token"),
+):
+    """
+    Clear all usage logs (admin only)
+    
+    Usage: DELETE /admin/usage-logs
+    Headers: X-Admin-Token: <your-admin-token>
+    """
+    admin_token = token or request.query_params.get("token")
+    if not admin_token:
+        return {"error": "Admin token required", "hint": "Use X-Admin-Token header or ?token= query param"}
+    
+    return clear_logs(admin_token)
+
+
+# ============================================
+# Request logging middleware for all endpoints
+# ============================================
+
+@app.middleware("http")
+async def log_all_requests(request: Request, call_next):
+    """Log all incoming requests"""
+    # Skip logging for admin endpoints and health checks
+    if not request.url.path.startswith("/admin") and request.url.path != "/health":
+        client_ip = request.client.host if request.client else "unknown"
+        user_agent = request.headers.get("user-agent", "Unknown")
+        
+        # Get request body if present (for POST/PUT)
+        body = None
+        if request.method in ("POST", "PUT"):
+            # We can't read body here easily, just log the method
+            body = {"method": request.method}
+        
+        log_request(
+            endpoint=request.url.path,
+            ip=client_ip,
+            method=request.method,
+            user_agent=user_agent,
+            request_body=body
+        )
+    
+    response = await call_next(request)
+    return response
