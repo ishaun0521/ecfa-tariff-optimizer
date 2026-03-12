@@ -21,7 +21,19 @@ class Constraints(BaseModel):
     max_material_adjustment_count: Optional[int] = Field(default=None, ge=1)
 
 
-class AnalyzeRequest(BaseModel):
+class ProductFactsMixin(BaseModel):
+    product_description: Optional[str] = None
+    manufacturing_process: Optional[str] = None
+    packaging_form: Optional[str] = None
+    intended_use: Optional[str] = None
+    brand: Optional[str] = None
+    model: Optional[str] = None
+    net_weight: Optional[float] = Field(default=None, ge=0)
+    retail_or_bulk: Optional[str] = None
+    supporting_documents: List[str] = Field(default_factory=list)
+
+
+class AnalyzeRequest(ProductFactsMixin):
     product_name: str
     destination_country: str = "CN"
     current_hs_code: Optional[str] = None
@@ -31,7 +43,7 @@ class AnalyzeRequest(BaseModel):
     bom_items: List[BomItem]
 
 
-class OptimizeRequest(BaseModel):
+class OptimizeRequest(ProductFactsMixin):
     product_name: str
     destination_country: str = "CN"
     current_hs_code: Optional[str] = None

@@ -1,4 +1,5 @@
 from app.schemas import AnalyzeRequest
+from app.services.classification import classify_product
 from app.services.rules import build_origin_breakdown, evaluate_ecfa_precheck, get_case_context
 
 FOOD_KEYWORDS = ["food", "食品", "drink", "beverage", "snack", "tea", "sauce", "noodle", "dessert"]
@@ -46,13 +47,14 @@ def analyze_product(req: AnalyzeRequest):
     adjustable_count = sum(1 for item in req.bom_items if item.adjustable)
     top_materials = sorted(req.bom_items, key=lambda x: x.ratio, reverse=True)[:5]
 
+    tariff_classification = classify_product(req)
     origin_breakdown, origin_ratio, _, total_cost = build_origin_breakdown(req.bom_items)
     dominant_origin = origin_breakdown[0]["origin_country"] if origin_breakdown else None
     case_context = get_case_context(req.product_name, req.product_category, req.bom_items)
     ecfa_precheck = evaluate_ecfa_precheck(
         product_name=req.product_name,
         product_category=req.product_category,
-        current_hs_code=req.current_hs_code,
+        current_hs_code=req.current_hs_code or tariff_classification.get("selected_working_hs_code"),
         destination_country=req.destination_country,
         declared_origin_country=req.declared_origin_country,
         bom_items=req.bom_items,
@@ -61,7 +63,11 @@ def analyze_product(req: AnalyzeRequest):
     missing_fields = _detect_missing_fields(req, total_ratio)
     warnings = _build_warnings(req, total_ratio, len(origin_ratio))
     warnings.extend([w for w in ecfa_precheck["warnings"] if w not in warnings])
+    warnings.extend([w for w in tariff_classification["warnings"] if w not in warnings])
     for field in ecfa_precheck["missing_fields"]:
+        if field not in missing_fields:
+            missing_fields.append(field)
+    for field in tariff_classification["key_missing_facts"]:
         if field not in missing_fields:
             missing_fields.append(field)
 
@@ -94,6 +100,7 @@ def analyze_product(req: AnalyzeRequest):
             "ratio_warning": total_ratio != 100,
             "dominant_origin_country": dominant_origin,
             "detected_product_case": case_context["case_name"],
+            "selected_working_hs_code": tariff_classification.get("selected_working_hs_code"),
         },
         "origin_breakdown": origin_breakdown,
         "top_materials": [
@@ -110,10 +117,12 @@ def analyze_product(req: AnalyzeRequest):
         "warnings": warnings,
         "missing_fields": missing_fields,
         "scenario_score": scenario_score,
+        "tariff_classification": tariff_classification,
         "ecfa_precheck": ecfa_precheck,
         "case_insights": case_context["case_insights"],
         "key_risk_materials": case_context["key_risk_materials"],
         "recommended_next_checks": case_context["recommended_next_checks"],
+        "customs_boundary_notice": tariff_classification["customs_boundary_notice"],
         "commercial_assessment": {
             "stage": "precheck",
             "status": ecfa_precheck["origin_precheck_status"],

@@ -89,6 +89,20 @@
       background: #eff4ff;
       color: var(--primary);
     }
+    .link-button {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      min-width: 150px;
+      padding: 12px 14px;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      background: white;
+      color: var(--text);
+      font: inherit;
+      font-weight: 700;
+      text-decoration: none;
+    }
     .actions {
       display: flex;
       gap: 12px;
@@ -270,6 +284,17 @@
       color: var(--muted);
       margin-right: 8px;
     }
+    .ownership-card {
+      margin-top: 16px;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      background: linear-gradient(180deg, #ffffff 0%, #f7fbff 100%);
+    }
+    .ownership-card strong a {
+      color: var(--primary);
+      text-decoration: none;
+    }
   </style>
 </head>
 <body>
@@ -281,6 +306,13 @@
       <div class="actions">
         <button type="button" class="ghost" id="loadSampleBtn">載入範例資料</button>
         <button type="button" class="secondary" id="clearBtn">清空表單</button>
+        <a class="link-button" href="/legal-sources">官方法規來源</a>
+        <a class="link-button" href="/tariff-guide">稅則判定教學</a>
+        <a class="link-button" href="https://caio.com.tw/" target="_blank" rel="noopener noreferrer">前往 caio.com.tw</a>
+      </div>
+      <div class="ownership-card">
+        <p><strong>平台所有權：</strong><strong><a href="https://caio.com.tw/" target="_blank" rel="noopener noreferrer">caio.com.tw</a> 陳以軒</strong></p>
+        <p class="muted">如果你想進一步了解 AI 導入、AI SEO、顧問服務與相關解決方案，歡迎從這個平台直接前往 <a href="https://caio.com.tw/" target="_blank" rel="noopener noreferrer">caio.com.tw</a> 查看 CAIO 提供的服務。</p>
       </div>
     </section>
 
@@ -321,6 +353,38 @@
           <div class="span-12">
             <label for="painPoints">目前卡點</label>
             <textarea id="painPoints" placeholder="例如：主原料來源受限；關鍵配方不能動；不確定 ECFA 是否適用"></textarea>
+          </div>
+          <div class="span-12">
+            <label for="productDescription">商品描述</label>
+            <textarea id="productDescription" placeholder="例如：台式鳳梨酥禮盒，常溫零售包裝，內含酥皮與鳳梨餡烘焙成品"></textarea>
+          </div>
+          <div class="span-4">
+            <label for="packagingForm">包裝型態</label>
+            <input id="packagingForm" placeholder="例如：常溫零售盒裝" />
+          </div>
+          <div class="span-4">
+            <label for="intendedUse">用途</label>
+            <input id="intendedUse" placeholder="例如：零售即食伴手禮" />
+          </div>
+          <div class="span-4">
+            <label for="retailOrBulk">零售 / 散裝</label>
+            <select id="retailOrBulk">
+              <option value="">請選擇</option>
+              <option value="retail">零售包裝</option>
+              <option value="bulk">散裝 / 工業原料</option>
+            </select>
+          </div>
+          <div class="span-12">
+            <label for="manufacturingProcess">製程說明</label>
+            <textarea id="manufacturingProcess" placeholder="例如：鳳梨餡在台熬製，外皮配料混合後包餡成型，再於台灣完成烘焙與包裝"></textarea>
+          </div>
+          <div class="span-12">
+            <label for="supportingDocuments">可提供文件（每行一項）</label>
+            <textarea id="supportingDocuments" placeholder="例如：產品規格書
+成分表
+製程說明
+原料來源證明
+原產地證明書"></textarea>
           </div>
         </div>
       </section>
@@ -515,6 +579,12 @@
         destination_country: document.getElementById('destinationCountry').value.trim() || 'CN',
         current_hs_code: document.getElementById('hsCode').value.trim() || null,
         current_tariff_rate: tariffValue === '' ? null : Number(tariffValue),
+        product_description: document.getElementById('productDescription').value.trim() || null,
+        manufacturing_process: document.getElementById('manufacturingProcess').value.trim() || null,
+        packaging_form: document.getElementById('packagingForm').value.trim() || null,
+        intended_use: document.getElementById('intendedUse').value.trim() || null,
+        retail_or_bulk: document.getElementById('retailOrBulk').value || null,
+        supporting_documents: parseLines(document.getElementById('supportingDocuments').value),
         bom_items: getBomItems(),
         optimization_brief: buildOptimizationBrief(),
       };
@@ -561,6 +631,7 @@
     function renderAnalyzeResult(data) {
       emptyState.style.display = 'none';
       const summary = data.summary || {};
+      const tariff = data.tariff_classification || {};
       const ecfa = data.ecfa_precheck || {};
       const commercial = data.commercial_assessment || {};
       const warnings = data.warnings || [];
@@ -570,6 +641,7 @@
       const goodsStatus = getStatusMeta(ecfa.ecfa_goods_list_status);
       const originStatus = getStatusMeta(ecfa.origin_precheck_status);
       const commercialStatus = getStatusMeta(commercial.status);
+      const classificationStatus = getStatusMeta(tariff.classification_status);
 
       results.innerHTML = `
         <div class="result-card full">
@@ -590,6 +662,14 @@
             </div>
           </div>
           <p style="margin-top:12px;">${summary.ratio_warning ? '目前 BOM 比例未達 100%，這份分析可用來找方向，但不建議直接拿去做正式判斷。' : '目前 BOM 結構可作為第一輪 ECFA 與商業可行性初判。'} </p>
+        </div>
+
+        <div class="result-card third">
+          <h3>稅則前置判定</h3>
+          <div class="${classificationStatus.className}">${escapeHtml(classificationStatus.text)}</div>
+          <p style="margin-top:10px;">${escapeHtml(tariff.classification_basis_summary || '尚未提供稅則前置判定摘要。')}</p>
+          <div class="section-title">工作號列</div>
+          <p><strong>${valueOrDash(tariff.selected_working_hs_code)}</strong></p>
         </div>
 
         <div class="result-card third">
@@ -646,7 +726,14 @@
           <h3>風險與提醒</h3>
           ${renderList(warnings, '目前沒有額外警示。')}
           <div class="section-title">候選 HS Code</div>
-          ${renderList(ecfa.candidate_hs_codes, '尚未提供候選 HS Code。')}
+          ${renderList((tariff.candidate_hs_codes || []).map(item => `${item.code}（${item.confidence}）`), '尚未提供候選 HS Code。')}
+        </div>
+
+        <div class="result-card full">
+          <h3>邊界聲明與人工覆核提醒</h3>
+          <div class="notice warn">${escapeHtml(data.customs_boundary_notice || tariff.customs_boundary_notice || '本結果僅供前期判斷，最終仍以海關接受申報與正式審核為準。')}</div>
+          <div class="section-title">人工覆核觸發條件</div>
+          ${renderList(tariff.manual_review_triggers, '目前未觸發額外人工覆核條件，但仍建議正式申報前由關務人員再確認。')}
         </div>
       `;
     }
@@ -712,17 +799,20 @@
     function renderOptimizeResult(data) {
       emptyState.style.display = 'none';
       const summary = data.summary || {};
+      const tariff = data.tariff_classification || {};
       const ecfa = data.ecfa_precheck || {};
       const recommended = data.recommended_scenario || null;
       const scenarios = data.candidate_scenarios || [];
       const warnings = data.warnings || [];
       const missingFields = data.missing_fields || [];
       const originStatus = getStatusMeta(ecfa.origin_precheck_status);
+      const classificationStatus = getStatusMeta(tariff.classification_status);
 
       results.innerHTML = `
         <div class="result-card full">
           <h3>最佳化總覽</h3>
           <p><strong>${escapeHtml(data.product_name || '未命名商品')}</strong>｜目前稅率 ${formatPercent(data.current_tariff_rate)}｜目的地 ${escapeHtml(data.destination_country || '—')}</p>
+          <p style="margin-top:8px;">稅則前置判定：<span class="${classificationStatus.className}">${escapeHtml(classificationStatus.text)}</span>｜工作號列 <strong>${valueOrDash(tariff.selected_working_hs_code)}</strong></p>
           <div class="stats-grid">
             <div class="stat-box">
               <div class="stat-label">候選方案數</div>
@@ -767,6 +857,8 @@
         <div class="result-card">
           <h3>全局風險提醒</h3>
           ${renderList(warnings, '目前沒有額外全局警示。')}
+          <div class="section-title">候選 HS Code</div>
+          ${renderList((tariff.candidate_hs_codes || []).map(item => `${item.code}（${item.confidence}）`), '尚未提供候選 HS Code。')}
         </div>
 
         <div class="result-card">
@@ -776,6 +868,13 @@
             <li>優先驗證推薦方案的採購可行性、供應穩定度與配方影響。</li>
             <li>準備原產地證明、製程說明與供應商文件，再進入正式享惠評估。</li>
           </ol>
+        </div>
+
+        <div class="result-card full">
+          <h3>邊界聲明與人工覆核提醒</h3>
+          <div class="notice warn">${escapeHtml(data.customs_boundary_notice || tariff.customs_boundary_notice || '本結果僅供前期判斷，最終仍以海關接受申報與正式審核為準。')}</div>
+          <div class="section-title">人工覆核觸發條件</div>
+          ${renderList(tariff.manual_review_triggers, '目前未觸發額外人工覆核條件，但仍建議正式申報前由關務人員再確認。')}
         </div>
       `;
     }
@@ -856,6 +955,12 @@
       document.getElementById('goal').value = '希望把稅率從 8% 降到更低';
       document.getElementById('principle').value = 'prioritize_tariff_reduction';
       document.getElementById('painPoints').value = '主原料來源受限\n核心口感不能改';
+      document.getElementById('productDescription').value = '台灣鳳梨酥禮盒，常溫零售包裝，內含烘焙酥皮與鳳梨餡。';
+      document.getElementById('packagingForm').value = '常溫零售盒裝';
+      document.getElementById('intendedUse').value = '零售即食伴手禮';
+      document.getElementById('retailOrBulk').value = 'retail';
+      document.getElementById('manufacturingProcess').value = '鳳梨餡在台灣熬製，外皮配料混合後包餡成型，再於台灣完成烘焙與包裝。';
+      document.getElementById('supportingDocuments').value = '產品規格書\n成分表\n製程說明\n原料來源證明';
       document.getElementById('costTolerance').value = 'medium';
       document.getElementById('maxCostIncreasePct').value = '3';
       document.getElementById('lockedMaterials').value = '鳳梨餡';

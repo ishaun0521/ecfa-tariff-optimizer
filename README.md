@@ -20,17 +20,22 @@ ECFA 關稅優惠最佳化平台的第一版 MVP。
 
 ### 產品入口 / 前端
 - `GET /`：前端 MVP 首頁
+- `GET /legal-sources`：官方法規來源頁
+- `GET /tariff-guide`：稅則判定教學頁
 - `GET /api-info`：API 根路徑資訊
-- Repo 內含 `frontend/index.html`，目前已由 FastAPI 直接 serve
+- Repo 內含前端靜態頁，已由 FastAPI 直接 serve
 - 前端提供：
   - 商品基本資料輸入
   - BOM 手動編輯
   - BOM 檔案上傳預覽
-  - 呼叫 `/analyze` 與 `/optimize`
-  - 顯示法規前置判斷與最佳化摘要
+  - 呼叫 `/classify`、`/analyze` 與 `/optimize`
+  - 顯示稅則前置判定、法規前置判斷與最佳化摘要
+  - 顯示邊界聲明與人工覆核提醒
 
 ### API
 - `GET /health`：健康檢查
+- `GET /official-sources.json`：官方來源 JSON
+- `POST /classify`：稅則前置判定（pre-classification）
 - `POST /analyze`：ECFA 前置分析
 - `POST /optimize`：BOM 最佳化商業方案
 - `POST /upload-bom`：CSV / XLSX / XLS BOM 預覽解析

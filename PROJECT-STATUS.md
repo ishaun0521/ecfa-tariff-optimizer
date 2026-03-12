@@ -35,8 +35,12 @@
 
 目前已存在：
 - `GET /`（前端 MVP 首頁）
+- `GET /legal-sources`（官方法規來源頁）
+- `GET /tariff-guide`（稅則判定教學頁）
 - `GET /api-info`
+- `GET /official-sources.json`
 - `GET /health`
+- `POST /classify`
 - `POST /analyze`
 - `POST /optimize`
 - `POST /upload-bom`

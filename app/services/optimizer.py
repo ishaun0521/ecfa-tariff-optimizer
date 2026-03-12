@@ -1,4 +1,5 @@
 from app.schemas import OptimizeRequest
+from app.services.classification import classify_product
 from app.services.rules import evaluate_ecfa_precheck, get_case_context
 
 
@@ -18,6 +19,7 @@ def optimize_bom(req: OptimizeRequest):
     if not adjustable:
         warnings.append("No adjustable BOM items available after locked-material filtering.")
 
+    tariff_classification = classify_product(req)
     case_context = get_case_context(req.product_name, req.product_category, req.bom_items)
     priority_levers = case_context["priority_levers"]
 
@@ -31,13 +33,17 @@ def optimize_bom(req: OptimizeRequest):
     ecfa_precheck = evaluate_ecfa_precheck(
         product_name=req.product_name,
         product_category=req.product_category,
-        current_hs_code=req.current_hs_code,
+        current_hs_code=req.current_hs_code or tariff_classification.get("selected_working_hs_code"),
         destination_country=req.destination_country,
         declared_origin_country=req.declared_origin_country,
         bom_items=req.bom_items,
     )
     warnings.extend([w for w in ecfa_precheck["warnings"] if w not in warnings])
+    warnings.extend([w for w in tariff_classification["warnings"] if w not in warnings])
     for field in ecfa_precheck["missing_fields"]:
+        if field not in missing_fields:
+            missing_fields.append(field)
+    for field in tariff_classification["key_missing_facts"]:
         if field not in missing_fields:
             missing_fields.append(field)
 
@@ -129,6 +135,7 @@ def optimize_bom(req: OptimizeRequest):
         "constraints": req.constraints.model_dump(),
         "warnings": warnings,
         "missing_fields": missing_fields,
+        "tariff_classification": tariff_classification,
         "ecfa_precheck": ecfa_precheck,
         "case_insights": case_context["case_insights"],
         "key_risk_materials": case_context["key_risk_materials"],
@@ -142,6 +149,7 @@ def optimize_bom(req: OptimizeRequest):
             "current_taiwan_ratio_pct": tw_ratio,
             "origin_ratio_gap_pct": ratio_gap,
             "detected_product_case": case_context["case_name"],
+            "selected_working_hs_code": tariff_classification.get("selected_working_hs_code"),
         },
         "commercial_assessment": {
             "stage": "optimization",
@@ -154,4 +162,5 @@ def optimize_bom(req: OptimizeRequest):
         "recommended_scenario": recommended,
         "candidate_scenarios": ranked_scenarios,
         "commercial_note": "本結果將 ECFA 法規前置條件與 BOM 商業最佳化分開呈現：是否享惠仍需先過貨品清單、原產地基準與文件三關。",
+        "customs_boundary_notice": tariff_classification["customs_boundary_notice"],
     }
