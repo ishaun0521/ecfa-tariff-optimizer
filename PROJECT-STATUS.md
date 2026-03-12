@@ -189,6 +189,14 @@
 
 `/upload-bom` 目前先做 preview，尚未把欄位正式映射成分析用 `bom_items`。
 
+### D. 稅則判定模組規格文件
+
+已新增 `docs/tariff-classification-module-spec.md`，明確定義：
+- 稅則 pre-classification 的輸入欄位
+- 候選號列 / 判定依據 / 風險提示 / 缺資料 / 人工覆核點的輸出結構
+- 與 `ecfa_precheck` / `optimize` 的串接方式
+- legal boundary：哪些僅能做前期判定、哪些必須人工或海關確認
+
 ---
 
 ## 6. 目前專案狀態判斷
@@ -211,6 +219,7 @@
 - Docker 實機驗證
 - Zeabur 部署排錯
 - upload mapping 深化
+- 將 `docs/tariff-classification-module-spec.md` 的 schema / service contract 實作進後端
 
 ### 狀態一句話
 

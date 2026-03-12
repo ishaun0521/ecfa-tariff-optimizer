@@ -133,6 +133,43 @@ ECFA 關稅優惠最佳化平台
 - `GET /health`：健康檢查
 - `GET /docs`：Swagger 文件
 
+## 6.1.1 稅則判定模組（Tariff Classification Module）
+### 功能定位
+在 `ecfa_precheck` 前先做 **pre-classification**，輸出候選號列、判定依據、風險提示、缺資料與人工覆核點。
+
+### 核心原則
+- 只能做前期稅則判定，不冒充最終海關裁定
+- 候選號列可作為 ECFA 清單比對入口，不等於最終報關號列
+- 若分類不穩，`ecfa_precheck` 與 `optimize` 都必須降級呈現
+
+### 建議輸入欄位
+除既有商品基本資料與 `bom_items` 外，建議新增：
+- `product_description`
+- `intended_use`
+- `sales_form`
+- `physical_form`
+- `is_ready_to_eat`
+- `is_mixed_set`
+- `main_ingredients`
+- `manufacturing_process`
+- `supporting_documents`
+
+### 建議輸出欄位
+- `classification_status`
+- `confidence_level`
+- `declared_hs_code_check`
+- `candidate_classifications`
+- `missing_information`
+- `risk_flags`
+- `manual_review_points`
+- `downstream_impacts`
+- `legal_boundary`
+
+### 串接方式
+- `POST /analyze`：先跑 `tariff_classification`，再跑 `ecfa_precheck`
+- `POST /optimize`：讀取分類結果，若分類風險高則在 scenario 加註 `classification_dependency` 與 `reclassification_trigger_risk`
+- 詳見：`docs/tariff-classification-module-spec.md`
+
 ## 6.2 ECFA 法規前置判斷
 ### API
 - `POST /analyze`

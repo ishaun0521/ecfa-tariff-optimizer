@@ -192,9 +192,8 @@ uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers
 - 平台 health check 路徑與 port 是否正確
 - 實際對外入口是否能打到容器內的 uvicorn
 
-### 3. 產品層 blocker 仍存在
-這些不是 Infra 這次修改範圍，但會影響「可交付 MVP」判定：
-- FastAPI 尚未正式接前端頁
+### 3. 產品層仍有後續可深化項目
+這些不影響目前「有商業邏輯的 MVP」已達成，但會影響後續正式部署與交付完整度：
 - 上傳 BOM 目前先做 preview，尚未把欄位映射成正式 `bom_items`
 - 法規判斷仍屬前期 heuristic / precheck，不是最終海關認定
 
@@ -211,7 +210,9 @@ uvicorn app.main:app --host 0.0.0.0 --port ${PORT:-8000} --proxy-headers
 - `examples/optimize-request.json`
 - `frontend/index.html`
 - `docs/local-validation.md`
+- `docs/tariff-classification-research.md`
+- `docs/tariff-classification-module-spec.md`
 
 ## 一句話總結
 
-現在這個 repo 已經是 **可本地跑 API、可做雙服務 demo 的 MVP 骨架**；但若要變成 **單網址即可完整展示、可直接上 Zeabur 的 deploy-ready 版本**，還需要把 FastAPI 與前端頁正式接上，並在有 Docker / Zeabur 的環境補做最後一輪容器與平台驗證。
+現在這個 repo 已經是 **可直接單網址展示、具法規前置判斷與商業最佳化邏輯的 ECFA MVP**；若要進一步成為 **deploy-ready / production-handoff 版本**，仍需要在有 Docker / Zeabur 的環境補做最後一輪容器驗證，並深化 upload mapping。
