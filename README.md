@@ -1,6 +1,6 @@
 # ECFA Tariff Optimizer MVP
 
-ECFA 關稅優惠最佳化平台的第一版 MVP。
+ECFA 關稅優惠最佳化 AI 助手的第一版 MVP。
 
 定位不是最終報關或法律認定工具，而是把 **ECFA 法規前置初判** 與 **BOM 商業最佳化模擬** 分開呈現，讓使用者先判斷：
 

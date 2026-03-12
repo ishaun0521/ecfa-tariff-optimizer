@@ -19,7 +19,7 @@ LEGAL_SOURCES_FILE = FRONTEND_DIR / "legal-sources.html"
 TARIFF_GUIDE_FILE = FRONTEND_DIR / "tariff-guide.html"
 CHANGELOG_FILE = FRONTEND_DIR / "changelog.html"
 
-app = FastAPI(title="ECFA Tariff Optimizer API", version="0.5.0")
+app = FastAPI(title="ECFA Tariff Optimizer AI Assistant API", version="0.5.0")
 
 app.add_middleware(
     CORSMiddleware,
