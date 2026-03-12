@@ -173,9 +173,17 @@
 - `docker run`
 - 容器內 `/health` 實測
 
-### B. Zeabur 正式部署成功
+### B. Zeabur 線上服務已可用
 
-目前 Zeabur 仍有 `502`，尚未完成正式可用部署。
+已確認線上服務可用：
+- `https://ecfa-tariff-api.zeabur.app/` → 前端首頁可開
+- `/health` → 正常
+- `/analyze` → 正常
+- `/optimize` → 正常
+
+目前尚未完成的是部署收尾：
+- Docker 實機驗證
+- upload mapping 深化
 
 ### C. Upload 欄位 mapping
 

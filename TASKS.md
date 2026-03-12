@@ -57,9 +57,10 @@
 - 這台環境沒有 Docker CLI
 - 尚未完成 `docker build` / `docker run` 實機驗證
 
-### Gap B：Zeabur 正式部署仍待排錯
-- 目前 Zeabur 仍有 `502`
-- 尚未完成正式可用部署
+### Gap B：Zeabur 前端/後端已可存取，但部署驗收仍未完全收尾
+- 已確認 `https://ecfa-tariff-api.zeabur.app/` 可開啟前端首頁
+- 已確認 `/health`、`/analyze`、`/optimize` 在線可用
+- 但尚未做完整 Docker 實機驗證與 upload mapping 深化
 
 ### Gap C：Upload 欄位 mapping 尚未做完
 - `/upload-bom` 目前先做 preview
@@ -209,7 +210,7 @@
 ### P3-3 部署準備
 - [ ] Docker image 本地驗證
 - [x] 確認 `PORT` 相容
-- [ ] 再回頭處理 Zeabur `502`
+- [x] 再回頭處理 Zeabur `502`
 
 **完成標準**
 - 本地版本先可完整演示
