@@ -138,6 +138,50 @@ def log_request(
     return log_entry
 
 
+def log_frontend_event(event_data: dict) -> dict:
+    """
+    Log a frontend tracking event
+    
+    Args:
+        event_data: The tracking event data from frontend
+    
+    Returns:
+        The log entry that was created
+    """
+    # Extract IP from request (will be added by the API endpoint)
+    # The actual IP logging happens at the API layer
+    
+    # Determine event category
+    event_type = event_data.get("event_type", "unknown")
+    
+    # Create a simplified frontend log entry
+    log_entry = {
+        "source": "frontend",
+        "timestamp": event_data.get("timestamp", datetime.now(timezone.utc).isoformat()),
+        "event_type": event_type,
+        "session_id": event_data.get("session_id", "unknown"),
+        "session_start": event_data.get("session_start"),
+        "page_url": event_data.get("page_url", ""),
+        "page_path": event_data.get("page_path", ""),
+        "page_title": event_data.get("page_title", ""),
+        "referrer": event_data.get("referrer", ""),
+        "user_agent": event_data.get("user_agent", ""),
+        "event_data": event_data.get("event_data", {}),
+    }
+    
+    # Load existing logs, add new entry, save
+    logs = _load_logs()
+    logs.append(log_entry)
+    
+    # Keep only last 1000 entries
+    if len(logs) > 1000:
+        logs = logs[-1000:]
+    
+    _save_logs(logs)
+    
+    return log_entry
+
+
 def get_logs(
     admin_token: str,
     limit: int = 100,

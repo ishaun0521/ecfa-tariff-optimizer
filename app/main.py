@@ -12,7 +12,7 @@ from app.services.analysis import analyze_product
 from app.services.classification import classify_product, official_sources
 from app.services.optimizer import optimize_bom
 from app.services.upload import parse_uploaded_file
-from app.services.usage_log import log_request, get_logs, clear_logs, ADMIN_TOKEN
+from app.services.usage_log import log_request, log_frontend_event, get_logs, clear_logs, ADMIN_TOKEN
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = BASE_DIR / "frontend"
@@ -113,6 +113,41 @@ def official_sources_endpoint():
 @app.get("/health")
 def health():
     return {"ok": True, "version": app.version}
+
+
+# ============================================
+# Frontend tracking endpoint
+# ============================================
+
+@app.post("/api/track")
+async def track_event(request: Request):
+    """
+    Receive frontend tracking events
+    
+    This endpoint is called by the JavaScript tracking code
+    to log page views, clicks, form submissions, etc.
+    """
+    try:
+        body = await request.json()
+        
+        # Get client IP for the tracking data
+        client_ip = request.client.host if request.client else "unknown"
+        
+        # Get IP geolocation
+        from app.services.usage_log import _get_ip_info
+        ip_info = _get_ip_info(client_ip)
+        
+        # Add IP info to the event
+        body["ip"] = client_ip
+        body["ip_info"] = ip_info
+        
+        # Log the event
+        log_frontend_event(body)
+        
+        return {"success": True}
+    except Exception as e:
+        # Silently fail - don't break the frontend
+        return {"success": False}
 
 
 @app.post("/classify")
