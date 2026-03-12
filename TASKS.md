@@ -22,6 +22,32 @@
 
 ---
 
+## 執行看板（2026-03-12 台灣時間）
+
+### 主協調
+- **Juli（main）**：總整、驗收、更新 `TASKS.md`、判斷是否達到「有商業邏輯的 MVP」目標
+
+### 已委派中的工作
+- **CIO**
+  - 範圍：`app/main.py`、`app/schemas.py`、`app/services/*.py`、`examples/*`
+  - 任務：P0 API contract 對齊 + P1 案例級商業邏輯補強
+  - 目前狀態：`IN_PROGRESS`
+- **CSO**
+  - 範圍：`frontend/index.html`、`docs/frontend-mvp-spec.md`
+  - 任務：P0 前端/API 對齊 + P2 結果頁與 UX 補強
+  - 目前狀態：`IN_PROGRESS`
+- **Infra**
+  - 範圍：`README.md`、`Dockerfile`、本地驗收與 deploy-readiness
+  - 任務：P0 README 對齊 + P3 本地驗收 / 容器驗證
+  - 目前狀態：`IN_PROGRESS`
+
+### 協作規則
+- 各 agent 優先處理自己負責的檔案，避免互相覆寫
+- 各 agent 先在 workspace 直接修改，不自行 push；由 Juli 驗收後統一整合
+- 若驗收後仍未達目標，Juli 需補任務、再拆派下一輪
+
+---
+
 ## 1. 當前主要缺口
 
 ### Gap A：前端 / 文件 / API 不同步
