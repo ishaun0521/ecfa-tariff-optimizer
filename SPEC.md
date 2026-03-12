@@ -126,6 +126,13 @@ ECFA 關稅優惠最佳化平台
 
 ---
 
+## 6.0 產品入口 / API 入口
+### 路由
+- `GET /`：前端 MVP 首頁
+- `GET /api-info`：API 與入口摘要
+- `GET /health`：健康檢查
+- `GET /docs`：Swagger 文件
+
 ## 6.2 ECFA 法規前置判斷
 ### API
 - `POST /analyze`
@@ -145,6 +152,9 @@ ECFA 關稅優惠最佳化平台
 - `origin_breakdown`
 - `top_materials`
 - `ecfa_precheck`
+- `case_insights`
+- `key_risk_materials`
+- `recommended_next_checks`
 - `commercial_assessment`
 
 ### `ecfa_precheck` 結構
@@ -180,6 +190,10 @@ ECFA 關稅優惠最佳化平台
 - `missing_fields`
 - `summary`
 - `ecfa_precheck`
+- `case_insights`
+- `key_risk_materials`
+- `recommended_next_checks`
+- `commercial_assessment`
 - `recommended_scenario`
 - `candidate_scenarios`
 - `commercial_note`

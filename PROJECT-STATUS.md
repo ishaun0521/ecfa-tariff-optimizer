@@ -31,7 +31,7 @@
 
 ## 3. 目前已完成
 
-### A. 產品入口與後端 MVP API
+### A. 產品入口 + 後端 MVP API
 
 目前已存在：
 - `GET /`（前端 MVP 首頁）
@@ -51,16 +51,16 @@
 - 是否可調整
 - 最佳化條件（constraints）
 
-### C. 測試 BOM
+### C. 測試案例與樣本輸入
 
-已建立示意測試案例：
+已建立可測案例：
 - 珍珠奶茶
 - 佳德鳳梨酥
 - 阿聰師芋頭酥
 
-### D. 法規前置判斷框架（已初步落成）
+### D. 法規前置判斷（案例級）
 
-後端已可輸出 `ecfa_precheck`，內容包含：
+後端可輸出 `ecfa_precheck`，內容包含：
 - `product_family`
 - `product_family_label`
 - `candidate_hs_codes`
@@ -73,7 +73,21 @@
 - `sources`
 - `origin_metrics`
 
-### E. 商業最佳化框架（已初步落成）
+並已補上 3 個案例模板：
+- 珍珠奶茶
+- 鳳梨酥
+- 芋頭酥
+
+每個模板都已包含：
+- 候選 HS code
+- 關鍵原料
+- 常見風險
+- 原產地卡點
+- 文件需求
+- 優先調整槓桿
+- recommended next checks
+
+### E. 商業最佳化（案例連動）
 
 後端已可輸出：
 - `recommended_scenario`
@@ -84,24 +98,46 @@
 - `current_taiwan_ratio_pct`
 - `origin_ratio_gap_pct`
 - `legal_basis_summary`
+- `commercial_assessment`
+- `commercial_note`
 
-### F. 本地可運行性驗證
+並已補上：
+- `case_insights`
+- `key_risk_materials`
+- `recommended_next_checks`
+
+### F. 前端結果頁（可直接演示）
+
+前端已對齊新版 API 欄位，結果頁可直接顯示：
+- 案件摘要
+- ECFA 貨品清單狀態
+- 原產地前置判斷
+- 商業評估定位
+- 關鍵材料
+- 來源結構
+- 缺欄位 / 補件提醒
+- 風險與提醒
+- 推薦方案與候選方案比較
+
+### G. 本地可運行性驗證
 
 已驗證可正常運作：
-- `/`
-- `/health`
-- `/docs`
-- `/analyze`
-- `/optimize`
-- `/upload-bom`
-- CSV/XLSX upload
+- `/` → 200，回 HTML
+- `/api-info` → 200
+- `/health` → 200
+- `/docs` → 200
+- `/analyze` → 200
+- `/optimize` → 200
+- `/upload-bom` → 200
+- CSV/XLSX upload preview 可用
 
-### G. Docker / 部署準備
+### H. Docker / 部署準備
 
 已完成：
 - `Dockerfile` 整理
 - `.dockerignore` 新增
 - `README.md` 補強
+- `docs/local-validation.md` 補上
 
 ---
 
@@ -130,76 +166,63 @@
 
 ## 5. 目前尚未完成
 
-### A. 食品類個別產品的細緻法規映射
+### A. Docker 實機驗證
 
-目前僅做到：
-- 商品家族級別的初步映射
-- 候選 HS 類別
-- 前置法規判斷框架
+目前已做 API 與啟動路徑驗證，但這台環境沒有 Docker CLI，尚未完成：
+- `docker build`
+- `docker run`
+- 容器內 `/health` 實測
 
-尚未做到：
-- 對個別產品形成穩定、細緻、可直接採用的產品級判斷
-
-### B. 完整前端 UI 成品
-
-目前尚未交付完整可操作的 Web UI：
-- 商品輸入表單
-- BOM 上傳頁
-- 分析結果頁
-- 最佳化結果頁
-
-### C. Zeabur 正式部署成功
+### B. Zeabur 正式部署成功
 
 目前 Zeabur 仍有 `502`，尚未完成正式可用部署。
+
+### C. Upload 欄位 mapping
+
+`/upload-bom` 目前先做 preview，尚未把欄位正式映射成分析用 `bom_items`。
 
 ---
 
 ## 6. 目前專案狀態判斷
 
-### 已完成的層級
-- 技術骨架
-- 後端 API
-- BOM 解析
-- 法規前置判斷框架
-- 商業最佳化框架
-- 測試資料
-- 本地可跑
+### 對「有商業邏輯的 MVP」目標
+**已達成**。
 
-### 未完成的層級
-- 更細食品法規映射
-- 前端成品整合
-- 正式部署交付
+原因：
+- `/` 已可直接打開前端 UI
+- `/analyze` 已顯示法規前置判斷
+- `/optimize` 已顯示可比較候選方案
+- 3 個食品案例會跑出不同重點與不同風險
+- 文件 / 前端 / 後端欄位已對齊
+- 結果已明確區分法規前置與商業推估
+
+### 對「正式部署交付」目標
+**尚未達成**。
+
+目前仍需：
+- Docker 實機驗證
+- Zeabur 部署排錯
+- upload mapping 深化
 
 ### 狀態一句話
 
-> 目前已具備 **可運行的後端骨架 + 初步法規前置判斷 + 商業最佳化框架**，但尚未達到可直接交付商業使用的完整 MVP。
+> 目前已達成 **可直接演示、具案例差異與商業邏輯的 ECFA MVP**；尚未完成的是 Docker / Zeabur 的正式部署收尾。
 
 ---
 
-## 7. 下一步建議順序
+## 7. 持續推進機制
 
-### 第一優先
-補強食品類個別產品規則：
-- 珍珠奶茶
-- 鳳梨酥
-- 芋頭酥
-
-### 第二優先
-完成前端 UI：
-- 商品輸入
-- BOM upload
-- 法規前置結果
-- 最佳化候選方案
-
-### 第三優先
-整合本地可用版本後，再處理 Zeabur 正式部署
+已建立 cron 持續追蹤：
+- 名稱：`ECFA MVP follow-through`
+- 頻率：每 30 分鐘
+- 目標：檢查 `TASKS.md`、驗收條件與 repo 現況；若有回歸或新 blocker，會繼續拆任務、委派、整合與回報。
 
 ---
 
 ## 8. 重要原則
 
 1. 不把最佳化推估假裝成法規結論
-2. 不把 demo 分數當成最終法律判定
+2. 不把 heuristic 分數當成最終法律判定
 3. 所有 ECFA 結果必須標示：
    - 法規依據
    - 仍需人工確認的點

@@ -53,26 +53,17 @@
 
 ## 1. 當前主要缺口
 
-### Gap A：前端 / 文件 / API 不同步
-目前仍存在舊欄位：
-- `mock_ecfa_result`
-- `note`
+### Gap A：Docker 實機驗證尚未完成
+- 這台環境沒有 Docker CLI
+- 尚未完成 `docker build` / `docker run` 實機驗證
 
-但後端已改為：
-- `ecfa_precheck`
-- `commercial_assessment`
-- `commercial_note`
+### Gap B：Zeabur 正式部署仍待排錯
+- 目前 Zeabur 仍有 `502`
+- 尚未完成正式可用部署
 
-### Gap B：前端未正式接成產品入口
-- repo 有 `frontend/index.html`
-- 但 FastAPI `/` 目前回 JSON，不是前端頁
-
-### Gap C：商業邏輯仍以產品家族級為主
-目前做到：
-- 飲料 / 烘焙類候選
-
-尚未做到：
-- 珍珠奶茶 / 鳳梨酥 / 芋頭酥等個案級結果差異
+### Gap C：Upload 欄位 mapping 尚未做完
+- `/upload-bom` 目前先做 preview
+- 尚未正式映射成分析用 `bom_items`
 
 ---
 
@@ -202,22 +193,22 @@
 目標：把 MVP 整理成可驗收、可部署的狀態。
 
 ### P3-1 本地驗收
-- [ ] `/` 可打開前端
-- [ ] `/health` 正常
-- [ ] `/docs` 正常
-- [ ] `/upload-bom` 可上傳 CSV / XLSX
-- [ ] `/analyze` 可回傳法規前置判斷
-- [ ] `/optimize` 可回傳候選方案
+- [x] `/` 可打開前端
+- [x] `/health` 正常
+- [x] `/docs` 正常
+- [x] `/upload-bom` 可上傳 CSV / XLSX
+- [x] `/analyze` 可回傳法規前置判斷
+- [x] `/optimize` 可回傳候選方案
 
 ### P3-2 文件同步
-- [ ] `README.md` 更新
-- [ ] `PROJECT-STATUS.md` 更新
-- [ ] `SPEC.md` 更新（若欄位有增修）
-- [ ] `TASKS.md` 勾選已完成項目
+- [x] `README.md` 更新
+- [x] `PROJECT-STATUS.md` 更新
+- [x] `SPEC.md` 更新（若欄位有增修）
+- [x] `TASKS.md` 勾選已完成項目
 
 ### P3-3 部署準備
 - [ ] Docker image 本地驗證
-- [ ] 確認 `PORT` 相容
+- [x] 確認 `PORT` 相容
 - [ ] 再回頭處理 Zeabur `502`
 
 **完成標準**
@@ -244,38 +235,45 @@
 
 當下列條件同時成立，才算「有商業邏輯的 MVP」：
 
-- [ ] 打開 `/` 能直接操作 Web UI
-- [ ] 使用者可輸入商品與 BOM
-- [ ] `/analyze` 顯示法規前置判斷
-- [ ] `/optimize` 顯示可比較的候選方案
-- [ ] 三個食品案例會跑出不同重點與不同風險
-- [ ] 文件 / 前端 / 後端欄位一致
-- [ ] 結果有標示哪些是法規前置、哪些是商業推估
+- [x] 打開 `/` 能直接操作 Web UI
+- [x] 使用者可輸入商品與 BOM
+- [x] `/analyze` 顯示法規前置判斷
+- [x] `/optimize` 顯示可比較的候選方案
+- [x] 三個食品案例會跑出不同重點與不同風險
+- [x] 文件 / 前端 / 後端欄位一致
+- [x] 結果有標示哪些是法規前置、哪些是商業推估
 
 ---
 
 ## 5. 現在建議直接開工的第一批任務
 
 ### Batch 1
-- [ ] 更新 `docs/frontend-mvp-spec.md`
-- [ ] 更新 `README.md`
-- [ ] 讓 `/` serve `frontend/index.html`
-- [ ] 改前端 JS 對齊新 API 欄位
+- [x] 更新 `docs/frontend-mvp-spec.md`
+- [x] 更新 `README.md`
+- [x] 讓 `/` serve `frontend/index.html`
+- [x] 改前端 JS 對齊新 API 欄位
 
 ### Batch 2
-- [ ] 補 3 個案例模板
-- [ ] 補 `case_insights`
-- [ ] 補 `key_risk_materials`
-- [ ] 補 `recommended_next_checks`
+- [x] 補 3 個案例模板
+- [x] 補 `case_insights`
+- [x] 補 `key_risk_materials`
+- [x] 補 `recommended_next_checks`
 
 ### Batch 3
-- [ ] 改善結果頁顯示
-- [ ] 跑本地驗收
+- [x] 改善結果頁顯示
+- [x] 跑本地驗收
 - [ ] 更新文件並準備 deploy
 
 ---
 
-## 6. 備註
+## 6. 自動持續推進機制
+
+- 已建立 cron：`ECFA MVP follow-through`
+- 頻率：每 30 分鐘
+- 目的：檢查 `TASKS.md` / `PROJECT-STATUS.md` / repo 狀態；若未達標或出現回歸，繼續拆任務、委派、整合與驗收
+- 若目標已達成且無新變化，維持安靜，不做多餘打擾
+
+## 7. 備註
 
 - Zeabur `502` 不是本輪最優先，除非本地版本已完整可用
 - 若發現新欄位需要擴充，先更新 `SPEC.md` 與 `docs/frontend-mvp-spec.md`，再改 API 與前端
