@@ -1,0 +1,901 @@
+<!DOCTYPE html>
+<html lang="zh-Hant">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>ECFA 關稅優惠最佳化平台</title>
+  <style>
+    :root {
+      --bg: #f5f7fb;
+      --card: #ffffff;
+      --text: #172033;
+      --muted: #5f6b85;
+      --primary: #276ef1;
+      --primary-soft: #eaf1ff;
+      --border: #dce4f2;
+      --success: #0f9d58;
+      --success-soft: #ecfdf3;
+      --warn: #d97706;
+      --warn-soft: #fff7ed;
+      --danger: #dc2626;
+      --danger-soft: #fef2f2;
+      --slate: #0f172a;
+    }
+    * { box-sizing: border-box; }
+    body {
+      margin: 0;
+      font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      line-height: 1.5;
+    }
+    .container {
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 24px;
+    }
+    .hero, .card {
+      background: var(--card);
+      border: 1px solid var(--border);
+      border-radius: 18px;
+      padding: 20px;
+      box-shadow: 0 6px 24px rgba(18, 30, 65, 0.05);
+    }
+    .hero { margin-bottom: 20px; }
+    h1, h2, h3, h4 { margin: 0 0 12px; }
+    p { margin: 0 0 10px; }
+    ul, ol { margin: 8px 0 0 20px; padding: 0; }
+    .muted { color: var(--muted); }
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+      margin-bottom: 16px;
+    }
+    .span-12 { grid-column: span 12; }
+    .span-8 { grid-column: span 8; }
+    .span-6 { grid-column: span 6; }
+    .span-4 { grid-column: span 4; }
+    @media (max-width: 900px) {
+      .span-8, .span-6, .span-4 { grid-column: span 12; }
+    }
+    label {
+      display: block;
+      font-size: 14px;
+      font-weight: 600;
+      margin-bottom: 6px;
+    }
+    input, select, textarea, button {
+      width: 100%;
+      border-radius: 12px;
+      border: 1px solid var(--border);
+      padding: 12px 14px;
+      font: inherit;
+    }
+    textarea { min-height: 96px; resize: vertical; }
+    button {
+      background: var(--primary);
+      color: white;
+      border: none;
+      font-weight: 700;
+      cursor: pointer;
+    }
+    button.secondary {
+      background: white;
+      color: var(--text);
+      border: 1px solid var(--border);
+    }
+    button.ghost {
+      background: #eff4ff;
+      color: var(--primary);
+    }
+    .actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+    }
+    .actions button { width: auto; min-width: 150px; }
+    .notice {
+      border-radius: 12px;
+      padding: 12px 14px;
+      margin: 12px 0;
+      font-size: 14px;
+    }
+    .notice.info { background: #eef6ff; color: #1d4ed8; }
+    .notice.warn { background: var(--warn-soft); color: #b45309; }
+    .notice.error { background: var(--danger-soft); color: #b91c1c; }
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      margin-top: 10px;
+      background: white;
+      border-radius: 12px;
+      overflow: hidden;
+    }
+    th, td {
+      border-bottom: 1px solid var(--border);
+      padding: 10px;
+      text-align: left;
+      vertical-align: top;
+    }
+    th { background: #f7f9fc; font-size: 14px; }
+    td input, td select { padding: 10px; }
+    .pill {
+      display: inline-block;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: var(--primary-soft);
+      color: var(--primary);
+      font-size: 12px;
+      font-weight: 700;
+      margin-right: 8px;
+      margin-bottom: 8px;
+    }
+    .status-pill {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-size: 12px;
+      font-weight: 800;
+      letter-spacing: 0.02em;
+    }
+    .status-success { background: var(--success-soft); color: var(--success); }
+    .status-warn { background: var(--warn-soft); color: var(--warn); }
+    .status-danger { background: var(--danger-soft); color: var(--danger); }
+    .status-info { background: var(--primary-soft); color: var(--primary); }
+    .results {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .result-card {
+      grid-column: span 6;
+      background: white;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+    }
+    .result-card.full { grid-column: span 12; }
+    .result-card.third { grid-column: span 4; }
+    @media (max-width: 900px) {
+      .result-card, .result-card.third { grid-column: span 12; }
+    }
+    .stats-grid {
+      display: grid;
+      grid-template-columns: repeat(3, 1fr);
+      gap: 12px;
+      margin-top: 8px;
+    }
+    @media (max-width: 700px) {
+      .stats-grid { grid-template-columns: 1fr; }
+    }
+    .stat-box {
+      background: #f8fbff;
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 14px;
+    }
+    .stat-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 6px;
+    }
+    .stat-value {
+      font-size: 24px;
+      font-weight: 800;
+    }
+    .key-list, .bullet-list {
+      display: grid;
+      gap: 10px;
+    }
+    .key-item, .scenario-change {
+      border: 1px solid var(--border);
+      border-radius: 14px;
+      padding: 12px 14px;
+      background: #fbfcff;
+    }
+    .scenario-grid {
+      display: grid;
+      grid-template-columns: repeat(12, 1fr);
+      gap: 16px;
+    }
+    .scenario-card {
+      grid-column: span 6;
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fff;
+    }
+    .scenario-card.recommended {
+      border: 2px solid var(--primary);
+      box-shadow: 0 10px 24px rgba(39, 110, 241, 0.08);
+    }
+    @media (max-width: 900px) {
+      .scenario-card { grid-column: span 12; }
+    }
+    .scenario-top {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 12px;
+      flex-wrap: wrap;
+      margin-bottom: 12px;
+    }
+    .scenario-metrics {
+      display: grid;
+      grid-template-columns: repeat(4, 1fr);
+      gap: 10px;
+      margin: 12px 0;
+    }
+    @media (max-width: 900px) {
+      .scenario-metrics { grid-template-columns: repeat(2, 1fr); }
+    }
+    .metric {
+      border: 1px solid var(--border);
+      border-radius: 12px;
+      padding: 10px;
+      background: #f9fbff;
+    }
+    .metric .label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-bottom: 4px;
+    }
+    .metric .value {
+      font-size: 18px;
+      font-weight: 800;
+    }
+    .section-title {
+      font-size: 13px;
+      font-weight: 800;
+      color: var(--muted);
+      text-transform: uppercase;
+      letter-spacing: 0.04em;
+      margin: 16px 0 8px;
+    }
+    .code-block {
+      white-space: pre-wrap;
+      word-break: break-word;
+      background: var(--slate);
+      color: #e2e8f0;
+      border-radius: 12px;
+      padding: 14px;
+      overflow: auto;
+      font-size: 13px;
+    }
+    .inline-label {
+      font-size: 12px;
+      color: var(--muted);
+      margin-right: 8px;
+    }
+  </style>
+</head>
+<body>
+  <div class="container">
+    <section class="hero">
+      <h1>ECFA 關稅優惠最佳化平台</h1>
+      <p>先把產品、BOM 與成本限制整理清楚，再快速找到潛在降稅與原料調整方向。</p>
+      <div class="notice info">目前為 MVP。結果屬於前置分析與商業建議，不等同正式關務判定。</div>
+      <div class="actions">
+        <button type="button" class="ghost" id="loadSampleBtn">載入範例資料</button>
+        <button type="button" class="secondary" id="clearBtn">清空表單</button>
+      </div>
+    </section>
+
+    <div class="grid">
+      <section class="card span-8">
+        <h2>1. 基本資料</h2>
+        <div class="grid">
+          <div class="span-6">
+            <label for="productName">商品名稱</label>
+            <input id="productName" placeholder="例如：鳳梨酥、芋頭酥、珍珠奶茶粉圓組合" />
+          </div>
+          <div class="span-6">
+            <label for="destinationCountry">目的地</label>
+            <input id="destinationCountry" value="CN" placeholder="例如：CN" />
+          </div>
+          <div class="span-6">
+            <label for="hsCode">目前 HS Code</label>
+            <input id="hsCode" placeholder="例如：1905.90.90" />
+          </div>
+          <div class="span-6">
+            <label for="currentTariffRate">目前稅率 (%)</label>
+            <input id="currentTariffRate" type="number" step="0.01" placeholder="例如：8" />
+          </div>
+          <div class="span-6">
+            <label for="goal">本次目標</label>
+            <input id="goal" placeholder="例如：希望把稅率從 8% 降到 0%" />
+          </div>
+          <div class="span-6">
+            <label for="principle">最佳化原則</label>
+            <select id="principle">
+              <option value="">請選擇</option>
+              <option value="prioritize_tariff_reduction">優先降稅</option>
+              <option value="prioritize_low_cost_change">優先低成本變動</option>
+              <option value="prioritize_supply_stability">優先供應穩定</option>
+              <option value="prioritize_low_formula_change">優先低配方改動</option>
+            </select>
+          </div>
+          <div class="span-12">
+            <label for="painPoints">目前卡點</label>
+            <textarea id="painPoints" placeholder="例如：主原料來源受限；關鍵配方不能動；不確定 ECFA 是否適用"></textarea>
+          </div>
+        </div>
+      </section>
+
+      <section class="card span-4">
+        <h2>2. BOM 上傳</h2>
+        <p class="muted">接受 CSV / XLSX / XLS。先上傳預覽，再補其餘條件。</p>
+        <input type="file" id="bomFile" accept=".csv,.xlsx,.xls" />
+        <div class="actions" style="margin-top:12px;">
+          <button type="button" id="uploadBtn">上傳 BOM</button>
+        </div>
+        <div id="uploadResult" class="notice info" style="display:none;"></div>
+        <div id="uploadPreview" class="code-block" style="display:none;"></div>
+      </section>
+    </div>
+
+    <section class="card" style="margin-bottom: 16px;">
+      <h2>3. BOM 明細</h2>
+      <p class="muted">可手動新增，或先上傳後再人工確認。比例總和建議為 100%。</p>
+      <div id="ratioNotice" class="notice warn">尚未檢查比例總和。</div>
+      <table>
+        <thead>
+          <tr>
+            <th>材料名稱</th>
+            <th>比例 (%)</th>
+            <th>成本</th>
+            <th>原產地</th>
+            <th>可調整</th>
+            <th></th>
+          </tr>
+        </thead>
+        <tbody id="bomTableBody"></tbody>
+      </table>
+      <div class="actions" style="margin-top:12px;">
+        <button type="button" class="secondary" id="addBomRowBtn">新增一列</button>
+      </div>
+    </section>
+
+    <section class="card" style="margin-bottom: 16px;">
+      <h2>4. 最佳化條件</h2>
+      <div class="grid">
+        <div class="span-4">
+          <label for="costTolerance">成本容忍等級</label>
+          <select id="costTolerance">
+            <option value="">請選擇</option>
+            <option value="low">低</option>
+            <option value="medium">中</option>
+            <option value="high">高</option>
+          </select>
+        </div>
+        <div class="span-4">
+          <label for="maxCostIncreasePct">最大成本增加 (%)</label>
+          <input id="maxCostIncreasePct" type="number" step="0.01" value="3" />
+        </div>
+        <div class="span-4">
+          <label for="lockedMaterials">不可調整材料</label>
+          <input id="lockedMaterials" placeholder="例如：奶粉, 鳳梨餡核心配方" />
+        </div>
+        <div class="span-12">
+          <label for="immutableConditions">不能動條件（每行一條）</label>
+          <textarea id="immutableConditions" placeholder="例如：
+1. 口感不能明顯改變
+2. 單位成本最多增加 3%
+3. 主要供應商不可更換"></textarea>
+        </div>
+      </div>
+      <div class="actions">
+        <button type="button" id="analyzeBtn">先做資料分析</button>
+        <button type="button" id="optimizeBtn">產出最佳化方案</button>
+      </div>
+      <div id="apiMessage" class="notice info" style="display:none;"></div>
+    </section>
+
+    <section class="card">
+      <h2>5. 分析結果</h2>
+      <p id="emptyState" class="muted">尚未產生結果。先填基本資料與 BOM，再開始分析。</p>
+      <div id="results" class="results"></div>
+    </section>
+  </div>
+
+  <script>
+    const bomTableBody = document.getElementById('bomTableBody');
+    const ratioNotice = document.getElementById('ratioNotice');
+    const apiMessage = document.getElementById('apiMessage');
+    const results = document.getElementById('results');
+    const emptyState = document.getElementById('emptyState');
+    const uploadResult = document.getElementById('uploadResult');
+    const uploadPreview = document.getElementById('uploadPreview');
+
+    function escapeHtml(value) {
+      return String(value ?? '')
+        .replace(/&/g, '&amp;')
+        .replace(/</g, '&lt;')
+        .replace(/>/g, '&gt;')
+        .replace(/"/g, '&quot;')
+        .replace(/'/g, '&#39;');
+    }
+
+    function formatNumber(value, digits = 2) {
+      const num = Number(value);
+      return Number.isFinite(num) ? num.toFixed(digits) : '—';
+    }
+
+    function formatPercent(value, digits = 2) {
+      const num = Number(value);
+      return Number.isFinite(num) ? `${num.toFixed(digits)}%` : '—';
+    }
+
+    function valueOrDash(value) {
+      if (value === null || value === undefined || value === '') return '—';
+      return escapeHtml(value);
+    }
+
+    function labelize(value) {
+      if (!value) return '未提供';
+      return String(value)
+        .replace(/_/g, ' ')
+        .replace(/\b\w/g, char => char.toUpperCase());
+    }
+
+    function getStatusMeta(status) {
+      const normalized = String(status || '').toLowerCase();
+      if ([ 'eligible', 'ready', 'pass', 'ok', 'good', 'complete' ].some(k => normalized.includes(k))) {
+        return { text: labelize(status), className: 'status-pill status-success' };
+      }
+      if ([ 'not', 'fail', 'blocked', 'ineligible', 'error', 'reject' ].some(k => normalized.includes(k))) {
+        return { text: labelize(status), className: 'status-pill status-danger' };
+      }
+      if ([ 'warn', 'risk', 'check', 'partial', 'missing', 'review' ].some(k => normalized.includes(k))) {
+        return { text: labelize(status), className: 'status-pill status-warn' };
+      }
+      return { text: labelize(status || 'pending_review'), className: 'status-pill status-info' };
+    }
+
+    function createBomRow(data = {}) {
+      const tr = document.createElement('tr');
+      tr.innerHTML = `
+        <td><input class="material_name" value="${escapeHtml(data.material_name || '')}" placeholder="材料名稱"></td>
+        <td><input class="ratio" type="number" step="0.01" value="${data.ratio ?? ''}" placeholder="0"></td>
+        <td><input class="cost" type="number" step="0.01" value="${data.cost ?? ''}" placeholder="0"></td>
+        <td><input class="origin_country" value="${escapeHtml(data.origin_country || '')}" placeholder="例如：TW"></td>
+        <td>
+          <select class="adjustable">
+            <option value="true" ${data.adjustable !== false ? 'selected' : ''}>可調整</option>
+            <option value="false" ${data.adjustable === false ? 'selected' : ''}>不可調整</option>
+          </select>
+        </td>
+        <td><button type="button" class="secondary delete-row">刪除</button></td>
+      `;
+      tr.querySelector('.delete-row').addEventListener('click', () => {
+        tr.remove();
+        updateRatioNotice();
+      });
+      tr.querySelectorAll('input').forEach(el => el.addEventListener('input', updateRatioNotice));
+      tr.querySelector('select').addEventListener('change', updateRatioNotice);
+      bomTableBody.appendChild(tr);
+      updateRatioNotice();
+    }
+
+    function getBomItems() {
+      return Array.from(bomTableBody.querySelectorAll('tr')).map(tr => ({
+        material_name: tr.querySelector('.material_name').value.trim(),
+        ratio: Number(tr.querySelector('.ratio').value || 0),
+        cost: Number(tr.querySelector('.cost').value || 0),
+        origin_country: tr.querySelector('.origin_country').value.trim(),
+        adjustable: tr.querySelector('.adjustable').value === 'true'
+      })).filter(row => row.material_name);
+    }
+
+    function parseLines(text) {
+      return text.split('\n').map(v => v.trim()).filter(Boolean);
+    }
+
+    function parseCommaList(text) {
+      return text.split(',').map(v => v.trim()).filter(Boolean);
+    }
+
+    function buildOptimizationBrief() {
+      return {
+        goal: document.getElementById('goal').value.trim() || null,
+        pain_points: parseLines(document.getElementById('painPoints').value),
+        optimization_principle: document.getElementById('principle').value || null,
+        cost_tolerance_level: document.getElementById('costTolerance').value || null,
+        immutable_conditions: parseLines(document.getElementById('immutableConditions').value),
+      };
+    }
+
+    function buildPayload(includeConstraints = false) {
+      const tariffValue = document.getElementById('currentTariffRate').value;
+      const payload = {
+        product_name: document.getElementById('productName').value.trim(),
+        destination_country: document.getElementById('destinationCountry').value.trim() || 'CN',
+        current_hs_code: document.getElementById('hsCode').value.trim() || null,
+        current_tariff_rate: tariffValue === '' ? null : Number(tariffValue),
+        bom_items: getBomItems(),
+        optimization_brief: buildOptimizationBrief(),
+      };
+
+      if (includeConstraints) {
+        payload.constraints = {
+          max_cost_increase_pct: Number(document.getElementById('maxCostIncreasePct').value || 0),
+          locked_materials: parseCommaList(document.getElementById('lockedMaterials').value),
+          notes: document.getElementById('immutableConditions').value.trim() || null,
+        };
+      }
+
+      return payload;
+    }
+
+    function updateRatioNotice() {
+      const items = getBomItems();
+      if (!items.length) {
+        ratioNotice.className = 'notice warn';
+        ratioNotice.textContent = '尚未填入 BOM。至少需要 1 筆材料。';
+        return;
+      }
+      const total = items.reduce((sum, item) => sum + Number(item.ratio || 0), 0);
+      if (Math.abs(total - 100) < 0.0001) {
+        ratioNotice.className = 'notice info';
+        ratioNotice.textContent = `比例總和 ${total.toFixed(2)}%。目前看起來正常。`;
+      } else {
+        ratioNotice.className = 'notice warn';
+        ratioNotice.textContent = `比例總和為 ${total.toFixed(2)}%。建議調整為 100%，否則結果可信度較低。`;
+      }
+    }
+
+    function showMessage(text, kind = 'info') {
+      apiMessage.style.display = 'block';
+      apiMessage.className = `notice ${kind}`;
+      apiMessage.textContent = text;
+    }
+
+    function renderList(items, emptyText = '—') {
+      if (!items || !items.length) return `<p class="muted">${escapeHtml(emptyText)}</p>`;
+      return `<ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
+    }
+
+    function renderAnalyzeResult(data) {
+      emptyState.style.display = 'none';
+      const summary = data.summary || {};
+      const ecfa = data.ecfa_precheck || {};
+      const commercial = data.commercial_assessment || {};
+      const warnings = data.warnings || [];
+      const missingFields = data.missing_fields || [];
+      const topMaterials = data.top_materials || [];
+      const originBreakdown = data.origin_breakdown || [];
+      const goodsStatus = getStatusMeta(ecfa.ecfa_goods_list_status);
+      const originStatus = getStatusMeta(ecfa.origin_precheck_status);
+      const commercialStatus = getStatusMeta(commercial.status);
+
+      results.innerHTML = `
+        <div class="result-card full">
+          <h3>案件摘要</h3>
+          <p><strong>${escapeHtml(data.product_name || '未命名商品')}</strong>｜目的地 ${escapeHtml(data.destination_country || '—')}｜目前稅率 ${formatPercent(data.current_tariff_rate)}</p>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">BOM 筆數</div>
+              <div class="stat-value">${valueOrDash(summary.bom_item_count)}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">比例總和</div>
+              <div class="stat-value">${formatPercent(summary.total_ratio)}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">可調整材料</div>
+              <div class="stat-value">${valueOrDash(summary.adjustable_item_count)}</div>
+            </div>
+          </div>
+          <p style="margin-top:12px;">${summary.ratio_warning ? '目前 BOM 比例未達 100%，這份分析可用來找方向，但不建議直接拿去做正式判斷。' : '目前 BOM 結構可作為第一輪 ECFA 與商業可行性初判。'} </p>
+        </div>
+
+        <div class="result-card third">
+          <h3>ECFA 貨品清單</h3>
+          <div class="${goodsStatus.className}">${escapeHtml(goodsStatus.text)}</div>
+          <p style="margin-top:10px;">${escapeHtml(ecfa.ecfa_goods_list_reason || '尚未提供貨品清單判斷理由。')}</p>
+        </div>
+
+        <div class="result-card third">
+          <h3>原產地前置判斷</h3>
+          <div class="${originStatus.className}">${escapeHtml(originStatus.text)}</div>
+          <p style="margin-top:10px;">${escapeHtml(ecfa.origin_logic || '尚未提供原產地判斷邏輯。')}</p>
+        </div>
+
+        <div class="result-card third">
+          <h3>商業評估定位</h3>
+          <div class="${commercialStatus.className}">${escapeHtml(commercialStatus.text)}</div>
+          <p style="margin-top:10px;">${escapeHtml(commercial.message || '此結果可作為商業前期判斷與案件分流。')}</p>
+        </div>
+
+        <div class="result-card">
+          <h3>關鍵材料</h3>
+          <div class="key-list">
+            ${topMaterials.length ? topMaterials.map(item => `
+              <div class="key-item">
+                <strong>${escapeHtml(item.material_name || '未命名材料')}</strong>
+                <div class="muted">比例 ${formatPercent(item.ratio)}｜來源 ${escapeHtml(item.origin_country || '—')}｜${item.adjustable ? '可調整' : '不可調整'}</div>
+                <div class="muted">HS Code ${valueOrDash(item.hs_code)}｜供應商 ${valueOrDash(item.supplier_name)}</div>
+              </div>
+            `).join('') : '<p class="muted">尚無關鍵材料資料。</p>'}
+          </div>
+        </div>
+
+        <div class="result-card">
+          <h3>來源結構</h3>
+          <div class="key-list">
+            ${originBreakdown.length ? originBreakdown.map(item => `
+              <div class="key-item">
+                <strong>${escapeHtml(item.origin_country || '未標示')}</strong>
+                <div class="muted">材料數 ${valueOrDash(item.item_count)}｜占比 ${formatPercent(item.total_ratio_pct ?? item.total_ratio)}</div>
+              </div>
+            `).join('') : '<p class="muted">尚無來源分布資料。</p>'}
+          </div>
+        </div>
+
+        <div class="result-card">
+          <h3>缺少資料 / 補件提醒</h3>
+          ${renderList(missingFields, '目前沒有明顯缺欄位，可往下一步最佳化。')}
+          <div class="section-title">文件需求</div>
+          ${renderList(ecfa.document_requirements, '尚未列出文件需求。')}
+        </div>
+
+        <div class="result-card">
+          <h3>風險與提醒</h3>
+          ${renderList(warnings, '目前沒有額外警示。')}
+          <div class="section-title">候選 HS Code</div>
+          ${renderList(ecfa.candidate_hs_codes, '尚未提供候選 HS Code。')}
+        </div>
+      `;
+    }
+
+    function renderScenarioCard(item, isRecommended = false) {
+      const riskMeta = getStatusMeta(item.risk_level);
+      return `
+        <div class="scenario-card ${isRecommended ? 'recommended' : ''}">
+          <div class="scenario-top">
+            <div>
+              <h3>${escapeHtml(item.scenario_name || '未命名方案')}</h3>
+              <p class="muted">${escapeHtml(item.summary || '尚未提供方案摘要。')}</p>
+            </div>
+            <div>
+              ${isRecommended ? '<span class="status-pill status-info">推薦方案</span>' : ''}
+              <span class="${riskMeta.className}">${escapeHtml(riskMeta.text)}</span>
+            </div>
+          </div>
+
+          <div class="scenario-metrics">
+            <div class="metric">
+              <div class="label">預估新稅率</div>
+              <div class="value">${formatPercent(item.estimated_new_tariff_rate)}</div>
+            </div>
+            <div class="metric">
+              <div class="label">預估降幅</div>
+              <div class="value">${formatPercent(item.tariff_reduction_pct)}</div>
+            </div>
+            <div class="metric">
+              <div class="label">成本增加</div>
+              <div class="value">${formatPercent(item.estimated_cost_increase_pct)}</div>
+            </div>
+            <div class="metric">
+              <div class="label">可行性分數</div>
+              <div class="value">${valueOrDash(item.feasibility_score)}</div>
+            </div>
+          </div>
+
+          <div class="section-title">方案重點</div>
+          <p><span class="inline-label">方案分數</span><strong>${valueOrDash(item.scenario_score)}</strong></p>
+
+          <div class="section-title">建議調整</div>
+          <div class="bullet-list">
+            ${(item.bom_changes || []).map(change => `
+              <div class="scenario-change">
+                <strong>${escapeHtml(change.material_name || '未命名材料')}</strong>
+                <p>${escapeHtml(change.suggested_change || '—')}</p>
+                <div class="muted">目前比例 ${formatPercent(change.current_ratio)} → 建議比例 ${formatPercent(change.suggested_ratio)}</div>
+                <div class="muted">來源 ${escapeHtml(change.origin_country || '—')} → ${escapeHtml(change.suggested_origin_country || '—')}</div>
+              </div>
+            `).join('') || '<p class="muted">尚未提供 BOM 調整建議。</p>'}
+          </div>
+
+          <div class="section-title">法規依據摘要</div>
+          ${renderList(item.legal_basis_summary, '尚未提供法規依據摘要。')}
+
+          <div class="section-title">風險提醒</div>
+          ${renderList(item.warnings, '目前沒有額外風險提醒。')}
+        </div>
+      `;
+    }
+
+    function renderOptimizeResult(data) {
+      emptyState.style.display = 'none';
+      const summary = data.summary || {};
+      const ecfa = data.ecfa_precheck || {};
+      const recommended = data.recommended_scenario || null;
+      const scenarios = data.candidate_scenarios || [];
+      const warnings = data.warnings || [];
+      const missingFields = data.missing_fields || [];
+      const originStatus = getStatusMeta(ecfa.origin_precheck_status);
+
+      results.innerHTML = `
+        <div class="result-card full">
+          <h3>最佳化總覽</h3>
+          <p><strong>${escapeHtml(data.product_name || '未命名商品')}</strong>｜目前稅率 ${formatPercent(data.current_tariff_rate)}｜目的地 ${escapeHtml(data.destination_country || '—')}</p>
+          <div class="stats-grid">
+            <div class="stat-box">
+              <div class="stat-label">候選方案數</div>
+              <div class="stat-value">${valueOrDash(summary.generated_scenario_count)}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">目前台灣來源比重</div>
+              <div class="stat-value">${formatPercent(summary.current_taiwan_ratio_pct)}</div>
+            </div>
+            <div class="stat-box">
+              <div class="stat-label">目標比重差距</div>
+              <div class="stat-value">${formatPercent(summary.origin_ratio_gap_pct)}</div>
+            </div>
+          </div>
+          <p style="margin-top:12px;">原產地前置狀態：<span class="${originStatus.className}">${escapeHtml(originStatus.text)}</span></p>
+          <p>${escapeHtml(data.commercial_note || '本結果將 ECFA 法規前置條件與 BOM 商業最佳化分開呈現。')}</p>
+        </div>
+
+        <div class="result-card">
+          <h3>推薦方向</h3>
+          ${recommended ? `
+            <p><strong>${escapeHtml(recommended.scenario_name)}</strong></p>
+            <p>${escapeHtml(recommended.summary || '')}</p>
+            <p class="muted">預估新稅率 ${formatPercent(recommended.estimated_new_tariff_rate)}｜成本增加 ${formatPercent(recommended.estimated_cost_increase_pct)}｜可行性 ${valueOrDash(recommended.feasibility_score)}</p>
+          ` : '<p class="muted">目前沒有推薦方案，通常代表可調整材料不足或限制條件過嚴。</p>'}
+        </div>
+
+        <div class="result-card">
+          <h3>限制條件摘要</h3>
+          <p>最大成本增加：<strong>${formatPercent(data.constraints?.max_cost_increase_pct)}</strong></p>
+          <div class="section-title">不可調整材料</div>
+          ${renderList(data.constraints?.locked_materials, '未指定不可調整材料。')}
+          <div class="section-title">缺少資料 / 需補查</div>
+          ${renderList(missingFields, '目前沒有明顯缺欄位。')}
+        </div>
+
+        <div class="result-card full">
+          <h3>候選最佳化方案</h3>
+          ${scenarios.length ? `<div class="scenario-grid">${scenarios.map(item => renderScenarioCard(item, recommended && item.scenario_name === recommended.scenario_name)).join('')}</div>` : '<p class="muted">目前沒有可用方案，可能是沒有可調整材料或條件過嚴。</p>'}
+        </div>
+
+        <div class="result-card">
+          <h3>全局風險提醒</h3>
+          ${renderList(warnings, '目前沒有額外全局警示。')}
+        </div>
+
+        <div class="result-card">
+          <h3>下一步建議</h3>
+          <ol>
+            <li>確認成品 HS Code 與 ECFA 貨品清單是否匹配。</li>
+            <li>優先驗證推薦方案的採購可行性、供應穩定度與配方影響。</li>
+            <li>準備原產地證明、製程說明與供應商文件，再進入正式享惠評估。</li>
+          </ol>
+        </div>
+      `;
+    }
+
+    async function postJson(url, payload) {
+      const res = await fetch(url, {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(payload),
+      });
+      const data = await res.json();
+      if (!res.ok) {
+        throw new Error(data.detail || 'Request failed');
+      }
+      return data;
+    }
+
+    async function handleAnalyze() {
+      try {
+        showMessage('分析中...', 'info');
+        const payload = buildPayload(false);
+        if (!payload.product_name || !payload.bom_items.length) {
+          throw new Error('請至少填入商品名稱與 1 筆 BOM。');
+        }
+        const data = await postJson('/analyze', payload);
+        renderAnalyzeResult(data);
+        showMessage('分析完成。可繼續產出最佳化方案。', 'info');
+      } catch (err) {
+        showMessage(err.message, 'error');
+      }
+    }
+
+    async function handleOptimize() {
+      try {
+        showMessage('產生方案中...', 'info');
+        const payload = buildPayload(true);
+        if (!payload.product_name || !payload.bom_items.length || payload.current_tariff_rate === null || Number.isNaN(payload.current_tariff_rate)) {
+          throw new Error('請填入商品名稱、目前稅率與至少 1 筆 BOM。');
+        }
+        const data = await postJson('/optimize', payload);
+        renderOptimizeResult(data);
+        showMessage('已產出最佳化方案。', 'info');
+      } catch (err) {
+        showMessage(err.message, 'error');
+      }
+    }
+
+    async function handleUpload() {
+      const fileInput = document.getElementById('bomFile');
+      const file = fileInput.files[0];
+      if (!file) {
+        showMessage('請先選擇 BOM 檔案。', 'error');
+        return;
+      }
+      const formData = new FormData();
+      formData.append('file', file);
+      try {
+        showMessage('上傳並解析 BOM 中...', 'info');
+        const res = await fetch('/upload-bom', { method: 'POST', body: formData });
+        const data = await res.json();
+        if (!res.ok) throw new Error(data.detail || 'Upload failed');
+        uploadResult.style.display = 'block';
+        uploadResult.className = 'notice info';
+        uploadResult.textContent = `檔案：${data.filename}｜欄位：${data.columns.join(', ')}｜列數：${data.row_count}`;
+        uploadPreview.style.display = 'block';
+        uploadPreview.textContent = JSON.stringify(data.preview, null, 2);
+        showMessage('BOM 檔案已解析。MVP 目前先提供預覽，欄位映射可在下一版補上。', 'info');
+      } catch (err) {
+        showMessage(err.message, 'error');
+      }
+    }
+
+    function loadSample() {
+      document.getElementById('productName').value = '鳳梨酥';
+      document.getElementById('destinationCountry').value = 'CN';
+      document.getElementById('hsCode').value = '1905.90.90';
+      document.getElementById('currentTariffRate').value = '8';
+      document.getElementById('goal').value = '希望把稅率從 8% 降到更低';
+      document.getElementById('principle').value = 'prioritize_tariff_reduction';
+      document.getElementById('painPoints').value = '主原料來源受限\n核心口感不能改';
+      document.getElementById('costTolerance').value = 'medium';
+      document.getElementById('maxCostIncreasePct').value = '3';
+      document.getElementById('lockedMaterials').value = '鳳梨餡';
+      document.getElementById('immutableConditions').value = '口感不能明顯改變\n單位成本最多增加 3%';
+      bomTableBody.innerHTML = '';
+      [
+        { material_name: '麵粉', ratio: 35, cost: 30, origin_country: 'TW', adjustable: true },
+        { material_name: '奶油', ratio: 20, cost: 42, origin_country: 'NZ', adjustable: true },
+        { material_name: '鳳梨餡', ratio: 30, cost: 55, origin_country: 'TW', adjustable: false },
+        { material_name: '糖', ratio: 10, cost: 8, origin_country: 'TW', adjustable: true },
+        { material_name: '蛋', ratio: 5, cost: 6, origin_country: 'TW', adjustable: true }
+      ].forEach(createBomRow);
+      showMessage('已載入範例資料。', 'info');
+    }
+
+    function clearForm() {
+      document.querySelectorAll('input, textarea').forEach(el => {
+        if (el.type === 'file') return;
+        el.value = '';
+      });
+      document.querySelectorAll('select').forEach(el => el.selectedIndex = 0);
+      document.getElementById('destinationCountry').value = 'CN';
+      document.getElementById('maxCostIncreasePct').value = '3';
+      bomTableBody.innerHTML = '';
+      results.innerHTML = '';
+      emptyState.style.display = 'block';
+      uploadResult.style.display = 'none';
+      uploadPreview.style.display = 'none';
+      showMessage('表單已清空。', 'info');
+      updateRatioNotice();
+    }
+
+    document.getElementById('addBomRowBtn').addEventListener('click', () => createBomRow());
+    document.getElementById('analyzeBtn').addEventListener('click', handleAnalyze);
+    document.getElementById('optimizeBtn').addEventListener('click', handleOptimize);
+    document.getElementById('uploadBtn').addEventListener('click', handleUpload);
+    document.getElementById('loadSampleBtn').addEventListener('click', loadSample);
+    document.getElementById('clearBtn').addEventListener('click', clearForm);
+
+    createBomRow();
+  </script>
+</body>
+</html>

@@ -31,10 +31,11 @@
 
 ## 3. 目前已完成
 
-### A. 後端 MVP API 骨架
+### A. 產品入口與後端 MVP API
 
 目前已存在：
-- `GET /`
+- `GET /`（前端 MVP 首頁）
+- `GET /api-info`
 - `GET /health`
 - `POST /analyze`
 - `POST /optimize`

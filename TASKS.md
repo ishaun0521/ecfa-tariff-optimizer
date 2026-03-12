@@ -27,19 +27,22 @@
 ### 主協調
 - **Juli（main）**：總整、驗收、更新 `TASKS.md`、判斷是否達到「有商業邏輯的 MVP」目標
 
-### 已委派中的工作
+### 已委派工作回收狀態
 - **CIO**
   - 範圍：`app/main.py`、`app/schemas.py`、`app/services/*.py`、`examples/*`
   - 任務：P0 API contract 對齊 + P1 案例級商業邏輯補強
-  - 目前狀態：`IN_PROGRESS`
+  - 目前狀態：`COMPLETED`（成果已回收）
 - **CSO**
   - 範圍：`frontend/index.html`、`docs/frontend-mvp-spec.md`
   - 任務：P0 前端/API 對齊 + P2 結果頁與 UX 補強
-  - 目前狀態：`IN_PROGRESS`
+  - 目前狀態：`COMPLETED`（成果已回收）
 - **Infra**
   - 範圍：`README.md`、`Dockerfile`、本地驗收與 deploy-readiness
   - 任務：P0 README 對齊 + P3 本地驗收 / 容器驗證
-  - 目前狀態：`IN_PROGRESS`
+  - 目前狀態：`COMPLETED`（成果已回收）
+- **Juli（main）**
+  - 任務：整合、補最後 blocker、端到端驗收、更新 `TASKS.md`
+  - 目前狀態：`INTEGRATING`
 
 ### 協作規則
 - 各 agent 優先處理自己負責的檔案，避免互相覆寫
@@ -79,40 +82,40 @@
 目標：讓文件、後端、前端說同一種語言。
 
 ### P0-1 更新前端規格文件
-- [ ] 更新 `docs/frontend-mvp-spec.md`
-- [ ] 將舊欄位 `mock_ecfa_result` 改為 `ecfa_precheck`
-- [ ] 將舊欄位 `note` 改為 `commercial_note`
-- [ ] 補上 `commercial_assessment` 的用途與顯示方式
+- [x] 更新 `docs/frontend-mvp-spec.md`
+- [x] 將舊欄位 `mock_ecfa_result` 改為 `ecfa_precheck`
+- [x] 將舊欄位 `note` 改為 `commercial_note`
+- [x] 補上 `commercial_assessment` 的用途與顯示方式
 
 **完成標準**
 - 文件中的 analyze / optimize response 與後端實際欄位一致
 
 ### P0-2 對齊 README
-- [ ] 更新 `README.md`
-- [ ] 移除「mock ECFA eligibility pre-check」等過時描述
-- [ ] 改為「legal precheck + commercial optimization suggestions」
-- [ ] 補上前端如何啟用與驗收方式
+- [x] 更新 `README.md`
+- [x] 移除「mock ECFA eligibility pre-check」等過時描述
+- [x] 改為「legal precheck + commercial optimization suggestions」
+- [x] 補上前端如何啟用與驗收方式
 
 **完成標準**
 - README 與 `PROJECT-STATUS.md` / `SPEC.md` 一致
 
 ### P0-3 明確 API Contract
-- [ ] 確認 `/analyze` response contract
-- [ ] 確認 `/optimize` response contract
-- [ ] 確認 examples 與 schema 一致
-- [ ] 更新 `examples/analyze-request-food.json`
-- [ ] 更新 `examples/optimize-request.json`
+- [x] 確認 `/analyze` response contract
+- [x] 確認 `/optimize` response contract
+- [x] 確認 examples 與 schema 一致
+- [x] 更新 `examples/analyze-request-food.json`
+- [x] 更新 `examples/optimize-request.json`
 
 **完成標準**
 - examples 可直接拿來跑 API
 - 回傳欄位與文件一致
 
 ### P0-4 前端正式接線
-- [ ] 讓 FastAPI `/` 直接 serve `frontend/index.html`
-- [ ] 補靜態檔案路由（若需要）
-- [ ] 前端改用 `ecfa_precheck`
-- [ ] 前端改用 `commercial_assessment`
-- [ ] 前端改用 `commercial_note`
+- [x] 讓 FastAPI `/` 直接 serve `frontend/index.html`
+- [x] 補靜態檔案路由（若需要）
+- [x] 前端改用 `ecfa_precheck`
+- [x] 前端改用 `commercial_assessment`
+- [x] 前端改用 `commercial_note`
 
 **完成標準**
 - 打開 `/` 就能看到前端頁
@@ -124,9 +127,9 @@
 目標：讓三個食品案例跑出「像真的在看案件」的結果。
 
 ### P1-1 建立案例模板
-- [ ] 珍珠奶茶 case template
-- [ ] 鳳梨酥 case template
-- [ ] 芋頭酥 case template
+- [x] 珍珠奶茶 case template
+- [x] 鳳梨酥 case template
+- [x] 芋頭酥 case template
 
 每個模板至少包含：
 - 候選產品類別
@@ -141,17 +144,17 @@
 - 三個案例在 analyze 時能產出不同重點與不同 legal findings
 
 ### P1-2 Analyze 結果補強
-- [ ] 新增 `case_insights`
-- [ ] 新增 `key_risk_materials`
-- [ ] 新增 `recommended_next_checks`
+- [x] 新增 `case_insights`
+- [x] 新增 `key_risk_materials`
+- [x] 新增 `recommended_next_checks`
 
 **完成標準**
 - 分析結果不只是 generic warnings，而是有產品差異的建議
 
 ### P1-3 Optimize 結果與案例連動
-- [ ] 讓最佳化方案依產品類型選擇優先槓桿材料
-- [ ] 讓 scenario summary 反映該產品的真實卡點
-- [ ] 讓 legal basis 與文件需求可追溯到產品情境
+- [x] 讓最佳化方案依產品類型選擇優先槓桿材料
+- [x] 讓 scenario summary 反映該產品的真實卡點
+- [x] 讓 legal basis 與文件需求可追溯到產品情境
 
 **完成標準**
 - 三個案例的 candidate scenarios 不能只是換名字，要能看出不同策略
@@ -162,33 +165,33 @@
 目標：讓結果能直接被人看懂，而不是只看 JSON。
 
 ### P2-1 分析結果頁
-- [ ] 顯示商品摘要
-- [ ] 顯示 BOM summary
-- [ ] 顯示 origin breakdown
-- [ ] 顯示 origin precheck status
-- [ ] 顯示 legal findings
-- [ ] 顯示 document requirements
-- [ ] 顯示 warnings / missing_fields
+- [x] 顯示商品摘要
+- [x] 顯示 BOM summary
+- [x] 顯示 origin breakdown
+- [x] 顯示 origin precheck status
+- [x] 顯示 legal findings
+- [x] 顯示 document requirements
+- [x] 顯示 warnings / missing_fields
 
 **完成標準**
 - 使用者不看 raw JSON 也能理解案件狀態
 
 ### P2-2 最佳化結果頁
-- [ ] 顯示 recommended scenario
-- [ ] 顯示 candidate scenarios 清單
-- [ ] 顯示 scenario_score / feasibility_score
-- [ ] 顯示 estimated tariff / cost change
-- [ ] 顯示 legal basis summary
-- [ ] 顯示 bom_changes
+- [x] 顯示 recommended scenario
+- [x] 顯示 candidate scenarios 清單
+- [x] 顯示 scenario_score / feasibility_score
+- [x] 顯示 estimated tariff / cost change
+- [x] 顯示 legal basis summary
+- [x] 顯示 bom_changes
 
 **完成標準**
 - 使用者可直接比較不同方案，不需自行閱讀 JSON 結構
 
 ### P2-3 表單與驗證補強
-- [ ] 補強缺欄位提示
-- [ ] 補強比例總和檢查
-- [ ] 補強 upload preview 與 manual input 的流程說明
-- [ ] 補強錯誤訊息文案
+- [x] 補強缺欄位提示
+- [x] 補強比例總和檢查
+- [x] 補強 upload preview 與 manual input 的流程說明
+- [x] 補強錯誤訊息文案
 
 **完成標準**
 - 使用者能知道自己缺什麼，不會只看到失敗

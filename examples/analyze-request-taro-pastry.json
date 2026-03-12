@@ -1,0 +1,64 @@
+{
+  "product_name": "阿聰師芋頭酥",
+  "product_category": "food",
+  "destination_country": "CN",
+  "current_hs_code": "1905.90.90",
+  "current_tariff_rate": 10.0,
+  "declared_origin_country": "TW",
+  "bom_items": [
+    {
+      "material_name": "麵粉",
+      "ratio": 26,
+      "cost": 28,
+      "origin_country": "TW",
+      "adjustable": true,
+      "hs_code": "1101.00",
+      "supplier_name": "Formosa Milling"
+    },
+    {
+      "material_name": "芋泥餡",
+      "ratio": 34,
+      "cost": 66,
+      "origin_country": "TW",
+      "adjustable": false,
+      "hs_code": "2005.99",
+      "supplier_name": "Taichung Taro Foods"
+    },
+    {
+      "material_name": "奶油",
+      "ratio": 16,
+      "cost": 42,
+      "origin_country": "NZ",
+      "adjustable": true,
+      "hs_code": "0405.10",
+      "supplier_name": "Kiwi Dairy"
+    },
+    {
+      "material_name": "酥油",
+      "ratio": 12,
+      "cost": 34,
+      "origin_country": "MY",
+      "adjustable": true,
+      "hs_code": "1517.90",
+      "supplier_name": "Golden Fat Supply"
+    },
+    {
+      "material_name": "糖",
+      "ratio": 8,
+      "cost": 12,
+      "origin_country": "TH",
+      "adjustable": true,
+      "hs_code": "1701.99",
+      "supplier_name": "Thai Sugar Group"
+    },
+    {
+      "material_name": "鹽",
+      "ratio": 4,
+      "cost": 2,
+      "origin_country": "TW",
+      "adjustable": false,
+      "hs_code": "2501.00",
+      "supplier_name": "Taiwan Salt"
+    }
+  ]
+}

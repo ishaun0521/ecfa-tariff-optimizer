@@ -1,16 +1,71 @@
 {
-  "product_name": "Sample Product",
+  "product_name": "台式珍珠奶茶粉圓飲品組",
+  "product_category": "food",
   "destination_country": "CN",
-  "current_hs_code": "0000.00.00",
+  "current_hs_code": "2106.90.99",
   "current_tariff_rate": 8.0,
+  "declared_origin_country": "TW",
   "bom_items": [
-    {"material_name": "Material A", "ratio": 40, "cost": 100, "origin_country": "TW", "adjustable": true},
-    {"material_name": "Material B", "ratio": 35, "cost": 80, "origin_country": "CN", "adjustable": true},
-    {"material_name": "Material C", "ratio": 25, "cost": 50, "origin_country": "JP", "adjustable": false}
+    {
+      "material_name": "紅茶萃取粉",
+      "ratio": 22,
+      "cost": 120,
+      "origin_country": "TW",
+      "adjustable": true,
+      "hs_code": "2101.20",
+      "supplier_name": "Taiwan Tea Co."
+    },
+    {
+      "material_name": "奶精粉",
+      "ratio": 28,
+      "cost": 95,
+      "origin_country": "MY",
+      "adjustable": true,
+      "hs_code": "1901.90",
+      "supplier_name": "Dairy Blend Ltd."
+    },
+    {
+      "material_name": "木薯粉圓",
+      "ratio": 18,
+      "cost": 70,
+      "origin_country": "TW",
+      "adjustable": true,
+      "hs_code": "1903.00",
+      "supplier_name": "Formosa Tapioca Foods"
+    },
+    {
+      "material_name": "蔗糖",
+      "ratio": 20,
+      "cost": 40,
+      "origin_country": "TH",
+      "adjustable": true,
+      "hs_code": "1701.99",
+      "supplier_name": "ASEAN Sugar Supply"
+    },
+    {
+      "material_name": "香料",
+      "ratio": 7,
+      "cost": 25,
+      "origin_country": "JP",
+      "adjustable": false,
+      "hs_code": "3302.10",
+      "supplier_name": "Flavor House"
+    },
+    {
+      "material_name": "乳化安定劑",
+      "ratio": 5,
+      "cost": 18,
+      "origin_country": "TW",
+      "adjustable": false,
+      "hs_code": "2106.90",
+      "supplier_name": "Taiwan Food Additives Inc."
+    }
   ],
   "constraints": {
     "max_cost_increase_pct": 2,
-    "locked_materials": ["Material C"],
-    "notes": "MVP example"
+    "locked_materials": ["香料", "乳化安定劑"],
+    "target_origin_ratio": 45,
+    "max_material_adjustment_count": 3,
+    "notes": "食品測試案例：希望增加台灣來源占比，驗證 commercial_assessment / candidate_scenarios / recommended_next_checks 欄位"
   }
 }
