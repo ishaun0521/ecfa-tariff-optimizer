@@ -35,6 +35,7 @@ ECFA 關稅優惠最佳化平台的第一版 MVP。
 ### API
 - `GET /health`：健康檢查
 - `GET /official-sources.json`：官方來源 JSON
+- `GET /sample-boms/<filename>`：下載範例 BOM CSV
 - `POST /classify`：稅則前置判定（pre-classification）
 - `POST /analyze`：ECFA 前置分析
 - `POST /optimize`：BOM 最佳化商業方案

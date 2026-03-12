@@ -13,6 +13,7 @@ from app.services.upload import parse_uploaded_file
 
 BASE_DIR = Path(__file__).resolve().parent.parent
 FRONTEND_DIR = BASE_DIR / "frontend"
+SAMPLE_BOM_DIR = BASE_DIR / "data" / "sample_boms"
 INDEX_FILE = FRONTEND_DIR / "index.html"
 LEGAL_SOURCES_FILE = FRONTEND_DIR / "legal-sources.html"
 TARIFF_GUIDE_FILE = FRONTEND_DIR / "tariff-guide.html"
@@ -29,6 +30,8 @@ app.add_middleware(
 
 if FRONTEND_DIR.exists():
     app.mount("/frontend", StaticFiles(directory=FRONTEND_DIR), name="frontend")
+if SAMPLE_BOM_DIR.exists():
+    app.mount("/sample-boms", StaticFiles(directory=SAMPLE_BOM_DIR), name="sample-boms")
 
 
 @app.get("/")
@@ -46,6 +49,7 @@ def root():
             "optimize": "POST /optimize",
             "upload_bom": "POST /upload-bom",
             "official_sources": "GET /official-sources.json",
+            "sample_boms": "GET /sample-boms/<filename>",
         },
         "note": "Frontend entry file was not found, so API metadata is returned instead.",
     }
@@ -83,6 +87,7 @@ def api_info():
             "optimize": "POST /optimize",
             "upload_bom": "POST /upload-bom",
             "official_sources": "GET /official-sources.json",
+            "sample_boms": "GET /sample-boms/<filename>",
         },
         "note": "MVP API for ECFA tariff legal precheck, pre-classification, and commercial optimization suggestions.",
     }

@@ -388,6 +388,7 @@
       <h1>ECFA 關稅優惠最佳化平台</h1>
       <p>先把產品、BOM 與成本限制整理清楚，再快速找到潛在降稅與原料調整方向。</p>
       <div class="notice info">目前為 MVP。結果屬於前置分析與商業建議，不等同正式關務判定。</div>
+      <div class="notice info">目前平台主要聚焦於<strong>食品類</strong>商品（例如：珍珠奶茶、鳳梨酥、芋頭酥）；其他類別會隨後續版本陸續增加。</div>
       <div class="actions">
         <button type="button" class="ghost" id="loadSampleBtn">載入範例資料</button>
         <button type="button" class="secondary" id="clearBtn">清空表單</button>
@@ -472,6 +473,13 @@
       <section class="card span-4">
         <h2>2. BOM 上傳</h2>
         <p class="muted">接受 CSV / XLSX / XLS。先上傳預覽，再補其餘條件。</p>
+        <div class="notice info">目前 BOM 範例與流程主要針對<strong>食品類</strong>商品設計；你可以先下載下面的範例 CSV 看欄位格式，再改成自己的 BOM 後上傳。</div>
+        <div class="section-title">下載範例 BOM（CSV）</div>
+        <ul>
+          <li><a href="/sample-boms/pearl_milk_tea_bom.csv" download>下載範例｜珍珠奶茶 BOM</a></li>
+          <li><a href="/sample-boms/chia_te_pineapple_cake_bom.csv" download>下載範例｜鳳梨酥 BOM</a></li>
+          <li><a href="/sample-boms/ah_tsung_shih_taro_pastry_bom.csv" download>下載範例｜芋頭酥 BOM</a></li>
+        </ul>
         <input type="file" id="bomFile" accept=".csv,.xlsx,.xls" />
         <div class="actions" style="margin-top:12px;">
           <button type="button" id="uploadBtn">上傳 BOM</button>
