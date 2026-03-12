@@ -295,9 +295,94 @@
       color: var(--primary);
       text-decoration: none;
     }
+    .consent-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(15, 23, 42, 0.62);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 20px;
+      z-index: 9999;
+    }
+    .consent-modal {
+      width: min(760px, 100%);
+      max-height: 88vh;
+      overflow: auto;
+      background: #fff;
+      border-radius: 22px;
+      border: 1px solid var(--border);
+      box-shadow: 0 24px 60px rgba(15, 23, 42, 0.24);
+      padding: 24px;
+    }
+    .consent-modal h2 {
+      margin-bottom: 10px;
+    }
+    .consent-box {
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      padding: 16px;
+      background: #fbfcff;
+      margin: 14px 0;
+    }
+    .consent-check {
+      display: flex;
+      align-items: flex-start;
+      gap: 10px;
+      margin: 16px 0;
+      font-size: 14px;
+    }
+    .consent-check input {
+      width: 18px;
+      height: 18px;
+      margin-top: 2px;
+      flex: 0 0 auto;
+    }
+    .consent-actions {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: flex-end;
+      margin-top: 16px;
+    }
+    .consent-actions button[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
+    }
   </style>
 </head>
 <body>
+  <div id="boundaryConsentOverlay" class="consent-overlay" role="dialog" aria-modal="true" aria-labelledby="boundaryConsentTitle">
+    <div class="consent-modal">
+      <h2 id="boundaryConsentTitle">使用前確認｜邊界說明 / 免責聲明</h2>
+      <p>在開始使用本平台前，請先閱讀以下說明。你必須確認已理解這些邊界，才能進入分析與最佳化流程。</p>
+
+      <div class="notice warn">
+        本平台提供的是 <strong>pre-classification / precheck</strong>、ECFA 前置判斷與商業最佳化建議，<strong>不是最終海關裁定或法律意見</strong>。
+      </div>
+
+      <div class="consent-box">
+        <ul>
+          <li>本平台輸出的候選 HS Code、原產地前置判斷、優惠可能性與最佳化建議，僅供前期評估與案件分流使用。</li>
+          <li>最終稅則號列、進口稅率、ECFA 優惠適用與原產地接受與否，仍以<strong>中國海關接受申報、預裁定或正式審核結果</strong>為準。</li>
+          <li>若商品屬複合食品、成分比例不明、包裝型態特殊、文件不一致或候選號列超過 1 個，應由專業關務 / 報關人員進一步人工覆核。</li>
+          <li>若你要查核平台依據，請先看：<a href="/legal-sources" target="_blank" rel="noopener noreferrer">官方法規來源</a> 與 <a href="/tariff-guide" target="_blank" rel="noopener noreferrer">稅則判定教學</a>。</li>
+        </ul>
+      </div>
+
+      <label class="consent-check">
+        <input id="boundaryConsentCheckbox" type="checkbox" />
+        <span>我已閱讀並理解上述邊界說明 / 免責聲明，知道本平台屬前置判斷工具，不應被視為最終海關裁定或正式法律意見。</span>
+      </label>
+
+      <div class="consent-actions">
+        <a class="link-button" href="/legal-sources" target="_blank" rel="noopener noreferrer">查看官方法規來源</a>
+        <a class="link-button" href="/tariff-guide" target="_blank" rel="noopener noreferrer">查看稅則教學</a>
+        <button id="boundaryConsentConfirmBtn" type="button" disabled>我已了解</button>
+      </div>
+    </div>
+  </div>
+
   <div class="container">
     <section class="hero">
       <h1>ECFA 關稅優惠最佳化平台</h1>
@@ -473,6 +558,9 @@
     const emptyState = document.getElementById('emptyState');
     const uploadResult = document.getElementById('uploadResult');
     const uploadPreview = document.getElementById('uploadPreview');
+    const boundaryConsentOverlay = document.getElementById('boundaryConsentOverlay');
+    const boundaryConsentCheckbox = document.getElementById('boundaryConsentCheckbox');
+    const boundaryConsentConfirmBtn = document.getElementById('boundaryConsentConfirmBtn');
 
     function escapeHtml(value) {
       return String(value ?? '')
@@ -481,6 +569,12 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#39;');
+    }
+
+    function applyBoundaryConsentState() {
+      const acknowledged = sessionStorage.getItem('ecfa-boundary-consent-v1') === 'yes';
+      boundaryConsentOverlay.style.display = acknowledged ? 'none' : 'flex';
+      document.body.style.overflow = acknowledged ? '' : 'hidden';
     }
 
     function formatNumber(value, digits = 2) {
@@ -1000,7 +1094,18 @@
     document.getElementById('loadSampleBtn').addEventListener('click', loadSample);
     document.getElementById('clearBtn').addEventListener('click', clearForm);
 
+    boundaryConsentCheckbox.addEventListener('change', () => {
+      boundaryConsentConfirmBtn.disabled = !boundaryConsentCheckbox.checked;
+    });
+
+    boundaryConsentConfirmBtn.addEventListener('click', () => {
+      if (!boundaryConsentCheckbox.checked) return;
+      sessionStorage.setItem('ecfa-boundary-consent-v1', 'yes');
+      applyBoundaryConsentState();
+    });
+
     createBomRow();
+    applyBoundaryConsentState();
   </script>
 </body>
 </html>
