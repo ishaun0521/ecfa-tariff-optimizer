@@ -754,9 +754,28 @@
       return `<ul>${items.map(item => `<li>${escapeHtml(item)}</li>`).join('')}</ul>`;
     }
 
+    function renderAiExplanationCard(explanation) {
+      if (!explanation) return '';
+      return `
+        <div class="result-card full" style="border:2px solid var(--primary); box-shadow:0 12px 28px rgba(39,110,241,0.08); background:linear-gradient(180deg,#ffffff 0%,#f7fbff 100%);">
+          <h3>${escapeHtml(explanation.layer_name || 'AI 助手解說')}</h3>
+          <p><strong>${escapeHtml(explanation.headline || '目前尚無 AI 助手結論。')}</strong></p>
+          <p>${escapeHtml(explanation.summary || '')}</p>
+          <div class="section-title">AI 助手怎麼看</div>
+          ${renderList(explanation.reasoning, '尚無解說重點。')}
+          <div class="section-title">關鍵結論</div>
+          ${renderList(explanation.key_points, '尚無關鍵結論。')}
+          <div class="section-title">建議先做</div>
+          ${renderList(explanation.recommended_actions, '尚無下一步建議。')}
+          <div class="notice info" style="margin-top:14px;">${escapeHtml(explanation.explanation_notice || 'AI 助手解說層是先把重點整理成人話；原始判定與詳細方案仍在下方完整保留。')}</div>
+        </div>
+      `;
+    }
+
     function renderAnalyzeResult(data) {
       emptyState.style.display = 'none';
       const summary = data.summary || {};
+      const aiExplanation = data.ai_explanation || null;
       const tariff = data.tariff_classification || {};
       const ecfa = data.ecfa_precheck || {};
       const commercial = data.commercial_assessment || {};
@@ -770,6 +789,7 @@
       const classificationStatus = getStatusMeta(tariff.classification_status);
 
       results.innerHTML = `
+        ${renderAiExplanationCard(aiExplanation)}
         <div class="result-card full">
           <h3>案件摘要</h3>
           <p><strong>${escapeHtml(data.product_name || '未命名商品')}</strong>｜目的地 ${escapeHtml(data.destination_country || '—')}｜目前稅率 ${formatPercent(data.current_tariff_rate)}</p>
@@ -925,6 +945,7 @@
     function renderOptimizeResult(data) {
       emptyState.style.display = 'none';
       const summary = data.summary || {};
+      const aiExplanation = data.ai_explanation || null;
       const tariff = data.tariff_classification || {};
       const ecfa = data.ecfa_precheck || {};
       const recommended = data.recommended_scenario || null;
@@ -935,6 +956,7 @@
       const classificationStatus = getStatusMeta(tariff.classification_status);
 
       results.innerHTML = `
+        ${renderAiExplanationCard(aiExplanation)}
         <div class="result-card full">
           <h3>最佳化總覽</h3>
           <p><strong>${escapeHtml(data.product_name || '未命名商品')}</strong>｜目前稅率 ${formatPercent(data.current_tariff_rate)}｜目的地 ${escapeHtml(data.destination_country || '—')}</p>

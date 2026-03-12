@@ -1,5 +1,6 @@
 from app.schemas import OptimizeRequest
 from app.services.classification import classify_product
+from app.services.explainer import build_optimization_explanation
 from app.services.rules import evaluate_ecfa_precheck, get_case_context
 
 
@@ -125,6 +126,20 @@ def optimize_bom(req: OptimizeRequest):
     ranked_scenarios = sorted(scenarios, key=lambda s: s["scenario_score"], reverse=True)
     recommended = ranked_scenarios[0] if ranked_scenarios else None
 
+    ai_explanation = build_optimization_explanation(
+        product_name=req.product_name,
+        summary={
+            "current_taiwan_ratio_pct": tw_ratio,
+            "origin_ratio_gap_pct": ratio_gap,
+        },
+        tariff_classification=tariff_classification,
+        ecfa_precheck=ecfa_precheck,
+        recommended_scenario=recommended,
+        candidate_scenarios=ranked_scenarios,
+        case_insights=case_context["case_insights"],
+        recommended_next_checks=case_context["recommended_next_checks"],
+    )
+
     return {
         "product_name": req.product_name,
         "product_category": req.product_category,
@@ -135,6 +150,7 @@ def optimize_bom(req: OptimizeRequest):
         "constraints": req.constraints.model_dump(),
         "warnings": warnings,
         "missing_fields": missing_fields,
+        "ai_explanation": ai_explanation,
         "tariff_classification": tariff_classification,
         "ecfa_precheck": ecfa_precheck,
         "case_insights": case_context["case_insights"],

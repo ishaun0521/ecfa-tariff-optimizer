@@ -1,5 +1,6 @@
 from app.schemas import AnalyzeRequest
 from app.services.classification import classify_product
+from app.services.explainer import build_analysis_explanation
 from app.services.rules import build_origin_breakdown, evaluate_ecfa_precheck, get_case_context
 
 FOOD_KEYWORDS = ["food", "食品", "drink", "beverage", "snack", "tea", "sauce", "noodle", "dessert"]
@@ -85,6 +86,19 @@ def analyze_product(req: AnalyzeRequest):
         ),
     )
 
+    ai_explanation = build_analysis_explanation(
+        product_name=req.product_name,
+        summary={
+            "detected_product_case": case_context["case_name"],
+            "selected_working_hs_code": tariff_classification.get("selected_working_hs_code"),
+        },
+        tariff_classification=tariff_classification,
+        ecfa_precheck=ecfa_precheck,
+        case_insights=case_context["case_insights"],
+        key_risk_materials=case_context["key_risk_materials"],
+        recommended_next_checks=case_context["recommended_next_checks"],
+    )
+
     return {
         "product_name": req.product_name,
         "destination_country": req.destination_country,
@@ -117,6 +131,7 @@ def analyze_product(req: AnalyzeRequest):
         "warnings": warnings,
         "missing_fields": missing_fields,
         "scenario_score": scenario_score,
+        "ai_explanation": ai_explanation,
         "tariff_classification": tariff_classification,
         "ecfa_precheck": ecfa_precheck,
         "case_insights": case_context["case_insights"],
