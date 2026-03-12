@@ -349,6 +349,24 @@
       opacity: 0.5;
       cursor: not-allowed;
     }
+    .meta-bar {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+      align-items: center;
+      margin: 10px 0 14px;
+    }
+    .meta-chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      padding: 6px 10px;
+      border-radius: 999px;
+      background: #f0f5ff;
+      color: #1d4ed8;
+      font-size: 12px;
+      font-weight: 700;
+    }
   </style>
 </head>
 <body>
@@ -386,6 +404,11 @@
   <div class="container">
     <section class="hero">
       <h1>ECFA 關稅優惠最佳化平台</h1>
+      <div class="meta-bar">
+        <span class="meta-chip">版本 v0.5.0</span>
+        <span class="meta-chip">更新時間：2026-03-12（台灣時間）</span>
+        <a class="link-button" href="/changelog">改版歷程</a>
+      </div>
       <p>先把產品、BOM 與成本限制整理清楚，再快速找到潛在降稅與原料調整方向。</p>
       <div class="notice info">目前為 MVP。結果屬於前置分析與商業建議，不等同正式關務判定。</div>
       <div class="notice info">目前平台主要聚焦於<strong>食品類</strong>商品（例如：珍珠奶茶、鳳梨酥、芋頭酥）；其他類別會隨後續版本陸續增加。</div>
@@ -394,6 +417,7 @@
         <button type="button" class="secondary" id="clearBtn">清空表單</button>
         <a class="link-button" href="/legal-sources">官方法規來源</a>
         <a class="link-button" href="/tariff-guide">稅則判定教學</a>
+        <a class="link-button" href="/changelog">改版歷程</a>
       </div>
     </section>
 

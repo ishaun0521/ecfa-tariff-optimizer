@@ -17,8 +17,9 @@ SAMPLE_BOM_DIR = BASE_DIR / "data" / "sample_boms"
 INDEX_FILE = FRONTEND_DIR / "index.html"
 LEGAL_SOURCES_FILE = FRONTEND_DIR / "legal-sources.html"
 TARIFF_GUIDE_FILE = FRONTEND_DIR / "tariff-guide.html"
+CHANGELOG_FILE = FRONTEND_DIR / "changelog.html"
 
-app = FastAPI(title="ECFA Tariff Optimizer API", version="0.4.0")
+app = FastAPI(title="ECFA Tariff Optimizer API", version="0.5.0")
 
 app.add_middleware(
     CORSMiddleware,
@@ -69,6 +70,13 @@ def tariff_guide_page():
     raise HTTPException(status_code=404, detail="tariff-guide page not found")
 
 
+@app.get("/changelog")
+def changelog_page():
+    if CHANGELOG_FILE.exists():
+        return FileResponse(CHANGELOG_FILE)
+    raise HTTPException(status_code=404, detail="changelog page not found")
+
+
 @app.get("/api-info")
 def api_info():
     return {
@@ -80,6 +88,7 @@ def api_info():
         "pages": {
             "legal_sources": "/legal-sources",
             "tariff_guide": "/tariff-guide",
+            "changelog": "/changelog",
         },
         "endpoints": {
             "classify": "POST /classify",

@@ -15,18 +15,26 @@
     .source{border:1px solid var(--border);border-radius:14px;padding:14px;margin:12px 0;background:#fbfcff}
     code{background:#eef4ff;padding:2px 6px;border-radius:6px}
     .ownership{background:linear-gradient(180deg,#fff 0%,#f7fbff 100%)}
+    .meta-bar{display:flex;gap:10px;flex-wrap:wrap;align-items:center;margin:10px 0 14px}
+    .meta-chip{display:inline-flex;align-items:center;gap:6px;padding:6px 10px;border-radius:999px;background:#f0f5ff;color:#1d4ed8;font-size:12px;font-weight:700}
   </style>
 </head>
 <body>
   <div class="container">
     <div class="card">
       <h1>官方法規來源與依據</h1>
+      <div class="meta-bar">
+        <span class="meta-chip">版本 v0.5.0</span>
+        <span class="meta-chip">更新時間：2026-03-12（台灣時間）</span>
+        <a class="link-btn" href="/changelog">改版歷程</a>
+      </div>
       <p>這一頁列出本平台在 <strong>稅則前置判定 / ECFA 前置判斷</strong> 中使用的官方來源，讓使用者可以自行核對來源與法律邊界。</p>
       <div class="notice">邊界聲明：本平台只做 <strong>pre-classification / precheck</strong>。最終稅則號列、進口稅率、ECFA 優惠適用與原產地接受與否，仍以中國海關接受申報、預裁定或正式審核結果為準。</div>
       <div class="actions">
         <a class="link-btn" href="/">回首頁</a>
         <a class="link-btn" href="/tariff-guide">看稅則判定教學</a>
         <a class="link-btn" href="/official-sources.json">看 JSON 資料</a>
+        <a class="link-btn" href="/changelog">改版歷程</a>
       </div>
     </div>
 
